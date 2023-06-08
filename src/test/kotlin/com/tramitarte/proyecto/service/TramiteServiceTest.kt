@@ -19,32 +19,32 @@ class TramiteServiceTest {
 
     @Test
     fun iniciar_conTramiteIniciado_iniciaTramite() {
-        var tramite = tramiteService.iniciarTramite();
-        assertThat(tramite).isNotNull();
+        val tramite = tramiteService.iniciarTramite()
+        assertThat(tramite).isNotNull()
         assertThat(tramite.id).isNotNull()
     }
 
     @Test
     fun iniciar_conTramiteIniciado_iniciaTramiteConTipo() {
-        var tramite = tramiteService.iniciarTramite()
+        val tramite = tramiteService.iniciarTramite()
         assertThat(tramite.tipo).isNotEmpty()
     }
 
     @Test
     fun iniciar_conTramiteIniciado_inicitaTramiteConCodigo() {
-        var tramite = tramiteService.iniciarTramite()
+        val tramite = tramiteService.iniciarTramite()
         assertThat(tramite.codigo).isNotEmpty()
     }
 
     @Test
     fun eliminar_conTramiteExistente_eliminaTramite() {
-        var tramite = TramiteBuilder.conTramiteIniciado()
+        val tramite = TramiteBuilder.conTramiteIniciado()
                 .conId(1)
                 .conCodigo(randomUUID().toString())
                 .conTipo("CIUDADANÍA")
                 .build()
-        var tramitePersistido = tramiteRepository.save(tramite)
-        var id: Long = tramitePersistido.id!!
+        val tramitePersistido = tramiteRepository.save(tramite)
+        val id: Long = tramitePersistido.id!!
         tramiteService.eliminar(id)
         assertFalse(tramiteRepository.existsById(id))
     }
