@@ -18,22 +18,29 @@ class TramiteServiceTest {
     private lateinit var tramiteRepository: TramiteRepository
 
     @Test
-    fun iniciar_conTramiteIniciado_iniciaTramite() {
+    fun iniciarTramite_conTramiteIniciado_iniciaTramite() {
         val tramite = tramiteService.iniciarTramite()
         assertThat(tramite).isNotNull()
         assertThat(tramite.id).isNotNull()
     }
 
     @Test
-    fun iniciar_conTramiteIniciado_iniciaTramiteConTipo() {
+    fun iniciarTramite_conTramiteIniciado_iniciaTramiteConTipo() {
         val tramite = tramiteService.iniciarTramite()
         assertThat(tramite.tipo).isNotEmpty()
     }
 
     @Test
-    fun iniciar_conTramiteIniciado_inicitaTramiteConCodigo() {
+    fun iniciarTramite_conTramiteIniciado_inicitaTramiteConCodigo() {
         val tramite = tramiteService.iniciarTramite()
         assertThat(tramite.codigo).isNotEmpty()
+    }
+
+    @Test
+    fun iniciarTramite_conTramiteAIniciar_iniciaTramiteConRoadmapAsociado() {
+        val tramite = tramiteService.iniciarTramite()
+
+        assertThat(tramite.etapa).isNotEmpty()
     }
 
     @Test

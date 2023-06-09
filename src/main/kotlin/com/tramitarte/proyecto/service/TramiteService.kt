@@ -13,9 +13,7 @@ class TramiteService {
     lateinit var tramiteRepository: TramiteRepository
 
     fun iniciarTramite(): Tramite {
-        val tramite = Tramite()
-        tramite.tipo = "CIUDADANÍA"
-        tramite.codigo = randomUUID().toString()
+        val tramite = Tramite(codigo = randomUUID().toString(), tipo = "CIUDADANÍA", etapa = "CARGAR AVO")
         return tramiteRepository.save(tramite)
     }
 

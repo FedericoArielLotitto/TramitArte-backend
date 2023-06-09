@@ -3,7 +3,7 @@ package com.tramitarte.proyecto.builder
 import com.tramitarte.proyecto.dominio.Tramite
 
 class TramiteBuilder {
-    private val tramite = Tramite()
+    private val tramite = Tramite(codigo = "", tipo = "", etapa = "")
 
     companion object {
       fun conTramiteIniciado(): TramiteBuilder = TramiteBuilder()
