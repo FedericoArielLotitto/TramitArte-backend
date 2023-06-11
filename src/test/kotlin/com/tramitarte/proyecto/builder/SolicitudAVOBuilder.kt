@@ -12,7 +12,7 @@ class SolicitudAVOBuilder {
         fun conSolicitudInicializada(): SolicitudAVOBuilder = SolicitudAVOBuilder()
     }
 
-    fun conId(id: Long): SolicitudAVOBuilder {
+    fun conId(id: Long?): SolicitudAVOBuilder {
         solicitudAVO.id = id
         return this
     }

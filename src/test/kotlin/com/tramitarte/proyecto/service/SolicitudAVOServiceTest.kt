@@ -3,6 +3,7 @@ package com.tramitarte.proyecto.service
 import com.tramitarte.proyecto.builder.SolicitudAVOBuilder
 import com.tramitarte.proyecto.dominio.Sexo
 import com.tramitarte.proyecto.dominio.SolicitudAVO
+import com.tramitarte.proyecto.repository.SolicitudAVORepository
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -13,6 +14,9 @@ import java.time.LocalDate
 class SolicitudAVOServiceTest {
     @Autowired
     lateinit var solicitudAVOService: SolicitudAVOService
+
+    @Autowired
+    lateinit var solicitudAVORepository: SolicitudAVORepository
     @Test
     fun guardar_conAVOaGuardar_retornaAVO() {
         val solicitudRecibida = SolicitudAVOBuilder
@@ -72,5 +76,87 @@ class SolicitudAVOServiceTest {
         val solicitudPersistida = solicitudAVOService.guardar(solicitudRecibida)
 
         assertThat(solicitudPersistida.sexo).isEqualTo(Sexo.MASCULINO)
+    }
+
+    @Test
+    fun guardar_conNombreVacio_lanzaExcepcion() {
+        val solicitudRecibida = SolicitudAVOBuilder.conSolicitudInicializada()
+            .conNombre("")
+            .conApellido("Apellido")
+            .conSexo(Sexo.FEMENINO)
+            .build()
+
+        assertThatIllegalArgumentException()
+            .isThrownBy{ solicitudAVOService.guardar(solicitudRecibida) }
+            .withMessage("El nombre del AVO es obligatorio.")
+    }
+
+    @Test
+    fun guardar_conApellidoVacio_lanzaExcepcion() {
+        val solicitudRecibida = SolicitudAVOBuilder.conSolicitudInicializada()
+            .conNombre("Nombre")
+            .conApellido("")
+            .conSexo(Sexo.MASCULINO)
+            .build()
+
+        assertThatIllegalArgumentException()
+            .isThrownBy{ solicitudAVOService.guardar(solicitudRecibida) }
+            .withMessage("El apellido del AVO es obligatorio.")
+    }
+
+    @Test
+    fun modificar_conSolicitudAVOGuardada_modificaNombre() {
+        val solicitudExistente = SolicitudAVOBuilder.conSolicitudInicializada()
+            .conNombre("Nombre Avo")
+            .conApellido("Apellido AVO")
+            .build()
+        val solicitudExistentePersistida = solicitudAVORepository.save(solicitudExistente)
+
+        val nombreNuevo = "Nuevo nombre"
+        solicitudExistentePersistida.nombre = nombreNuevo
+        val solicitudPersistida = solicitudAVOService.modificar(solicitudExistentePersistida)
+
+        assertThat(solicitudPersistida.nombre).isEqualTo(nombreNuevo)
+    }
+
+    @Test
+    fun modificar_conSolicitudAVOInexistente_lanzaExcepcion() {
+        val solicitudAVOInexistente = SolicitudAVOBuilder.conSolicitudInicializada()
+            .conNombre("NombreAVO")
+            .conApellido("ApellidoAVO")
+            .conSexo(Sexo.FEMENINO)
+            .build()
+
+        assertThatIllegalArgumentException()
+            .isThrownBy{ solicitudAVOService.modificar(solicitudAVOInexistente) }
+            .withMessage("La solicitud a modificar no existe.")
+    }
+
+    @Test
+    fun modificar_conNombreVacio_lanzaExcepcion() {
+        val solicitudExistente = SolicitudAVOBuilder.conSolicitudInicializada()
+            .conNombre("Nombre Avo")
+            .conApellido("Apellido AVO")
+            .build()
+        val solicitudExistentePersistida = solicitudAVORepository.save(solicitudExistente)
+        solicitudExistentePersistida.nombre = ""
+
+        assertThatIllegalArgumentException()
+            .isThrownBy{ solicitudAVOService.modificar(solicitudExistentePersistida) }
+            .withMessage("El nombre del AVO es obligatorio.")
+    }
+
+    @Test
+    fun modificar_conApellidoVacio_lanzaExcepcion() {
+        val solicitudExistente = SolicitudAVOBuilder.conSolicitudInicializada()
+            .conNombre("Nombre Avo")
+            .conApellido("Apellido AVO")
+            .build()
+        val solicitudExistentePersistida = solicitudAVORepository.save(solicitudExistente)
+        solicitudExistentePersistida.apellido = ""
+
+        assertThatIllegalArgumentException()
+            .isThrownBy{ solicitudAVOService.modificar(solicitudExistentePersistida) }
+            .withMessage("El apellido del AVO es obligatorio.")
     }
 }
