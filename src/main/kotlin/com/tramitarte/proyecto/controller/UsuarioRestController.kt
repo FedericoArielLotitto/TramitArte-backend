@@ -20,4 +20,8 @@ class UsuarioRestController {
     fun buscarTraductores(): List<Usuario> {
         return usuarioService.buscarPorRol(Rol.TRADUCTOR)
     }
+
+    @GetMapping("/usuario/solicitante")
+    fun buscarSolicitantes(): List<Usuario> =
+        usuarioService.buscarPorRol(Rol.TRADUCTOR).map{ usuario -> usuario.nesecitaTraduccion == true }
 }

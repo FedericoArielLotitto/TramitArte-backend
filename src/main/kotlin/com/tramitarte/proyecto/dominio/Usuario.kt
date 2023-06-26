@@ -14,4 +14,5 @@ class Usuario(nombre: String, apellido: String, rol: Rol) {
     var nombre: String = nombre
     var apellido: String = apellido
     var rol: Rol = rol
+    var nesecitaTraduccion: Boolean = false
 }
