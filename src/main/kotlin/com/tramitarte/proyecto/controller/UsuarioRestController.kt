@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.util.stream.Collector
+import java.util.stream.Collectors
 
 @RestController
 @CrossOrigin("*")
@@ -22,6 +24,8 @@ class UsuarioRestController {
     }
 
     @GetMapping("/usuario/solicitante")
-    fun buscarSolicitantes(): List<Usuario> =
-        usuarioService.buscarPorRol(Rol.TRADUCTOR).map{ usuario -> usuario.nesecitaTraduccion == true }
+    fun buscarSolicitantes(): List<Usuario> {
+        var list = usuarioService.buscarPorRol(Rol.TRADUCTOR).stream()
+        return list.filter{ usuario -> usuario.nesecitaTraduccion }.collect(Collectors.toList())
+    }
 }
