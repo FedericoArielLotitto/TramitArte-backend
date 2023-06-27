@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
+import java.util.stream.Collector
+import java.util.stream.Collectors
 import org.springframework.web.server.ResponseStatusException
 
 @RestController
@@ -26,6 +28,11 @@ class UsuarioRestController {
     fun buscarTraductores(): List<Usuario> {
         return usuarioService.buscarPorRol(Rol.TRADUCTOR)
     }
+
+    @GetMapping("/usuario/solicitante")
+    fun buscarSolicitantes(): List<Usuario> {
+        var list = usuarioService.buscarPorRol(Rol.TRADUCTOR).stream()
+        return list.filter{ usuario -> usuario.nesecitaTraduccion }.collect(Collectors.toList())
 
     @PostMapping("/usuario")
     fun crear(usuario: Usuario): ResponseEntity<Usuario> {

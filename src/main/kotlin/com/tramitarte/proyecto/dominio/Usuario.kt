@@ -7,12 +7,15 @@ import jakarta.persistence.Id
 
 
 @Entity
-class Usuario(nombre: String, apellido: String, rol: Rol, correoElectronico: String) {
+class Usuario(nombre: String, apellido: String, rol: Rol, precio: Float, correoElectronico: String) {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
     var nombre: String = nombre
     var apellido: String = apellido
     var rol: Rol = rol
+    var precio: Float = precio
+    var nesecitaTraduccion: Boolean = false
     var correoElectronico: String = correoElectronico
 }
