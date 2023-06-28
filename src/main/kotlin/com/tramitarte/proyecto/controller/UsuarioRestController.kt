@@ -32,10 +32,11 @@ class UsuarioRestController {
     @GetMapping("/usuario/solicitante")
     fun buscarSolicitantes(): List<Usuario> {
         var list = usuarioService.buscarPorRol(Rol.TRADUCTOR).stream()
-        return list.filter{ usuario -> usuario.nesecitaTraduccion }.collect(Collectors.toList())
+        return list.filter { usuario -> usuario.nesecitaTraduccion }.collect(Collectors.toList())
+    }
 
     @PostMapping("/usuario")
-    fun crear(usuario: Usuario): ResponseEntity<Usuario> {
+    fun crear(@RequestBody usuario: Usuario): ResponseEntity<Usuario> {
         try {
             return ResponseEntity.ok(usuarioService.crear(usuario))
         } catch (illegalArgumentExceptcion: IllegalArgumentException) {

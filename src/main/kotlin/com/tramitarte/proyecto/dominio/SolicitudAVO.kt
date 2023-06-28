@@ -1,5 +1,6 @@
 package com.tramitarte.proyecto.dominio
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -18,6 +19,7 @@ class SolicitudAVO(
     var id: Long? = null
     var nombre: String = nombre
     var apellido: String = apellido
+    @JsonFormat(pattern = "dd/MM/yyyy")
     var fechaNacimiento: LocalDate = fechaNacimiento
     var sexo: Sexo = sexo
 }
