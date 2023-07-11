@@ -1,9 +1,6 @@
 package com.tramitarte.proyecto.dominio
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.*
 
 
 @Entity
@@ -18,4 +15,8 @@ class Usuario(nombre: String, apellido: String, rol: Rol, precio: Float, correoE
     var precio: Float = precio
     var nesecitaTraduccion: Boolean = false
     var correoElectronico: String = correoElectronico
+    var documentacionValida: Boolean = false
+    @ManyToOne
+    @JoinColumn(name = "avo_cargado")
+    var avoCargado: SolicitudAVO? = null
 }

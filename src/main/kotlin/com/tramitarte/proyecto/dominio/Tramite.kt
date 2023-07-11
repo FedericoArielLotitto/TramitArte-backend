@@ -1,10 +1,6 @@
 package com.tramitarte.proyecto.dominio
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.OneToMany
+import jakarta.persistence.*
 
 @Entity
 class Tramite(codigo: String, tipo: String, etapa: String) {
@@ -14,7 +10,15 @@ class Tramite(codigo: String, tipo: String, etapa: String) {
     var id: Long? = null
     var codigo: String = codigo
     var tipo: String = tipo
-    var etapa: String = etapa
+    @OneToOne
+    var etapa: Etapa? = null
+    @OneToOne
+    @JoinColumn(name = "usuario_id")
+    var usuario: Usuario? = null
     @OneToMany
     var adjuntos = mutableListOf<Documentacion>()
+
+    fun avanzarEtapa(): Unit {
+        etapa?.verificarEtapa(usuario!!, this)
+    }
 }
