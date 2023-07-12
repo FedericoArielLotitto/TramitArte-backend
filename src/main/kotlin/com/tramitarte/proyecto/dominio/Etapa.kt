@@ -1,43 +1,90 @@
 package com.tramitarte.proyecto.dominio
 
 import com.tramitarte.proyecto.exepciones.ExcepcionDocumentacionInvalida
+import jakarta.persistence.*
 
-interface Etapa {
-    var descripcion: String
+@Entity
+abstract class Etapa() {
+    constructor(
+        _descripcion: String
+    ) : this() {
+        descripcion = _descripcion
+    }
 
-    fun verificarEtapa(usuario: Usuario, tramite: Tramite) {}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long = 0
+    var descripcion: String = ""
+
+    abstract fun verificarEtapa(usuario: Usuario, tramite: Tramite)
 }
 
-class Etapa1(override var descripcion: String): Etapa {
+class Etapa1(): Etapa() {
+    constructor(
+        _descripcion: String
+    ) : this() {
+        descripcion = _descripcion
+    }
+
     override fun verificarEtapa(usuario: Usuario, tramite: Tramite) {
-        if(usuario.avoCargado != null) {
-            // Cambio de etapa
-            tramite.etapa = null
+        if(usuario.solicitudAvo != null) {
+            tramite.etapa = Etapa2("Cargar Documentación del usuario")
         }
         else {
-            ExcepcionDocumentacionInvalida("La documentacion presentada no es valida")
+            ExcepcionDocumentacionInvalida("No se encontro un AVO (Descendiente verificado) valido")
         }
     }
 }
 
+class Etapa2(): Etapa() {
+    constructor(
+        _descripcion: String
+    ) : this() {
+        descripcion = _descripcion
+    }
 
-class Etapa2(override var descripcion: String): Etapa {
     override fun verificarEtapa(usuario: Usuario, tramite: Tramite) {
-        if(usuario.documentacionValida) {
-            // Cambio de etapa
-            tramite.etapa = null
+        if(usuario.documentacionValidada) {
+            tramite.etapa = Etapa3("Descripcion Etapa 3")
         }
         else {
-            ExcepcionDocumentacionInvalida("La documentacion presentada no es valida")
+            ExcepcionDocumentacionInvalida("La documentación presentada no es valida")
         }
     }
 }
 
-class Etapa3(override var descripcion: String): Etapa {
+class Etapa3(): Etapa() {
+    constructor(
+        _descripcion: String
+    ) : this() {
+        descripcion = _descripcion
+    }
+
+    override fun verificarEtapa(usuario: Usuario, tramite: Tramite) {
+        // TODO("Not yet implemented")
+    }
 }
 
-class Etapa4(override var descripcion: String): Etapa {
+class Etapa4(): Etapa() {
+    constructor(
+        _descripcion: String
+    ) : this() {
+        descripcion = _descripcion
+    }
+
+    override fun verificarEtapa(usuario: Usuario, tramite: Tramite) {
+        // TODO("Not yet implemented")
+    }
 }
 
-class Etapa5(override var descripcion: String): Etapa {
+class Etapa5(): Etapa() {
+    constructor(
+        _descripcion: String
+    ) : this() {
+        descripcion = _descripcion
+    }
+
+    override fun verificarEtapa(usuario: Usuario, tramite: Tramite) {
+        // TODO("Not yet implemented")
+    }
 }

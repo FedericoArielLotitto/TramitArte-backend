@@ -15,8 +15,12 @@ class Usuario(nombre: String, apellido: String, rol: Rol, precio: Float, correoE
     var precio: Float = precio
     var nesecitaTraduccion: Boolean = false
     var correoElectronico: String = correoElectronico
-    var documentacionValida: Boolean = false
+    var documentacionValidada: Boolean = false
     @ManyToOne
     @JoinColumn(name = "avo_cargado")
-    var avoCargado: SolicitudAVO? = null
+    var solicitudAvo: SolicitudAVO? = null
+
+    fun cargarAvo(avo: SolicitudAVO) {
+        solicitudAvo = avo
+    }
 }
