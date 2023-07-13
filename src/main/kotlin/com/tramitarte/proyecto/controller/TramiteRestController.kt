@@ -9,14 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import java.lang.Exception
 
@@ -55,6 +48,26 @@ class TramiteRestController {
     fun cargarDocumentacionAVO(@PathVariable id: Long, @RequestBody documentacion: Documentacion): ResponseEntity<Tramite> {
         try {
             var tramiteIniciado = tramiteService.guardarDocumentacion(id, documentacion)
+            return ResponseEntity(tramiteIniciado, HttpStatus.OK)
+        } catch (exception: IllegalArgumentException) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, exception.message)
+        }
+    }
+
+    @PatchMapping ("/imagen-dni")
+    fun subirImagenDNI(@PathVariable id: Long, @RequestParam("imagenDNI") imagenDNI: Documentacion): ResponseEntity<Tramite> {
+        try {
+            var tramiteIniciado = tramiteService.guardarDocumentacion(id, imagenDNI)
+            return ResponseEntity(tramiteIniciado, HttpStatus.OK)
+        } catch (exception: IllegalArgumentException) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, exception.message)
+        }
+    }
+
+    @PatchMapping ("/certificado-nacimiento")
+    fun subirCertificadoNacimiento(@PathVariable id: Long, @RequestParam("certificadoNacimiento") certificado: Documentacion): ResponseEntity<Tramite> {
+        try {
+            var tramiteIniciado = tramiteService.guardarDocumentacion(id, certificado)
             return ResponseEntity(tramiteIniciado, HttpStatus.OK)
         } catch (exception: IllegalArgumentException) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, exception.message)
