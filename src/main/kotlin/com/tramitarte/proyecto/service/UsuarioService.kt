@@ -28,6 +28,10 @@ class UsuarioService {
         }
     }
 
+    fun buscarPorNombreYPrecio(nombre: String, apellido: String, precio: Float): Usuario {
+        return usuarioRepository.findByNombreAnAndApellidoAndPrecio(nombre, apellido, precio)
+    }
+
     private fun validarFormatoCorreoElectronico(correoElectonico: String) {
         if (!correoElectonico.matches(Regex("^[0-9A-Za-z]+@[A-Za-z]+.[a-zA-Z]+"))) throw IllegalArgumentException("El formato del correo no es válido. Debe cumplir la forma nombrecorreo@dominio.extensionDeDominio.")
     }

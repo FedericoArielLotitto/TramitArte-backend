@@ -4,16 +4,10 @@ import com.tramitarte.proyecto.dominio.Rol
 import com.tramitarte.proyecto.dominio.Usuario
 import com.tramitarte.proyecto.service.UsuarioService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.jpa.repository.Query
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.bind.annotation.RestController
-import java.util.stream.Collector
+import org.springframework.web.bind.annotation.*
 import java.util.stream.Collectors
 import org.springframework.web.server.ResponseStatusException
 
@@ -34,6 +28,11 @@ class UsuarioRestController {
         var list = usuarioService.buscarPorRol(Rol.TRADUCTOR).stream()
         return list.filter { usuario -> usuario.nesecitaTraduccion }.collect(Collectors.toList())
     }
+
+    @GetMapping("/usuario/precio")
+    fun buscarUsuarioPrecio(
+        @RequestParam nombre: String, @RequestParam apellido: String, @RequestParam precio: Float): Usuario =
+        usuarioService.buscarPorNombreYPrecio(nombre, apellido, precio)
 
     @PostMapping("/usuario")
     fun crear(@RequestBody usuario: Usuario): ResponseEntity<Usuario> {

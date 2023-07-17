@@ -2,7 +2,6 @@ package com.tramitarte.proyecto.dominio
 
 import jakarta.persistence.*
 
-
 @Entity
 class Usuario(nombre: String, apellido: String, rol: Rol, precio: Float, correoElectronico: String) {
 
