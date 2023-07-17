@@ -1,6 +1,7 @@
 package com.tramitarte.proyecto.service
 
 import com.tramitarte.proyecto.dominio.Documentacion
+import com.tramitarte.proyecto.dominio.Etapa1
 import com.tramitarte.proyecto.dominio.Tramite
 import com.tramitarte.proyecto.repository.TramiteRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,7 +22,7 @@ class TramiteService {
 
     fun guardarDocumentacion(id: Long, documentacion: Documentacion): Tramite {
         var tramiteACargarDocumentacion = tramiteRepository.findById(id).get()
-        tramiteACargarDocumentacion.etapa = "DOCUMENTACION GENEALÓGICA"
+        tramiteACargarDocumentacion.etapa = Etapa1("DOCUMENTACION GENEALÓGICA")
         tramiteACargarDocumentacion.adjuntos.add(documentacion)
         return tramiteRepository.save(tramiteACargarDocumentacion)
     }

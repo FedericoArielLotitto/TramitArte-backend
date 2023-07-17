@@ -6,6 +6,7 @@ import com.tramitarte.proyecto.repository.UsuarioRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class UsuarioService {
@@ -28,8 +29,8 @@ class UsuarioService {
         }
     }
 
-    fun buscarPorNombreYPrecio(nombre: String, apellido: String, precio: Float): Usuario {
-        return usuarioRepository.findByNombreAnAndApellidoAndPrecio(nombre, apellido, precio)
+    fun buscarPorNombreYPrecio(nombre: Optional<String>, apellido: Optional<String>, precio: Optional<Float>): Usuario {
+        return usuarioRepository.findByNombreAndAndApellidoAndPrecio(nombre, apellido, precio)
     }
 
     private fun validarFormatoCorreoElectronico(correoElectonico: String) {

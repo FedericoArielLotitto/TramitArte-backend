@@ -4,12 +4,12 @@ import com.tramitarte.proyecto.dominio.Rol
 import com.tramitarte.proyecto.dominio.Usuario
 import com.tramitarte.proyecto.service.UsuarioService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.jpa.repository.Query
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.stream.Collectors
 import org.springframework.web.server.ResponseStatusException
+import java.util.*
 
 @RestController
 @CrossOrigin("*")
@@ -31,7 +31,7 @@ class UsuarioRestController {
 
     @GetMapping("/usuario/precio")
     fun buscarUsuarioPrecio(
-        @RequestParam nombre: String, @RequestParam apellido: String, @RequestParam precio: Float): Usuario =
+        @RequestParam nombre: Optional<String>, @RequestParam apellido: Optional<String>, @RequestParam precio: Optional<Float>): Usuario =
         usuarioService.buscarPorNombreYPrecio(nombre, apellido, precio)
 
     @PostMapping("/usuario")
