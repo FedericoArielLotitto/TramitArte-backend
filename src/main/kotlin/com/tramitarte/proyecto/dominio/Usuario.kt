@@ -14,7 +14,7 @@ class Usuario(nombre: String, apellido: String, rol: Rol, precio: Float, correoE
     var precio: Float = precio
     var nesecitaTraduccion: Boolean = false
     var correoElectronico: String = correoElectronico
-    var documentacionValidada: Boolean = false
+    lateinit var documentacion: MutableList<Documentacion>
     @ManyToOne
     @JoinColumn(name = "avo_cargado")
     var solicitudAvo: SolicitudAVO? = null
@@ -22,4 +22,6 @@ class Usuario(nombre: String, apellido: String, rol: Rol, precio: Float, correoE
     fun cargarAvo(avo: SolicitudAVO) {
         solicitudAvo = avo
     }
+
+    fun documentacionValida(): Boolean = true
 }

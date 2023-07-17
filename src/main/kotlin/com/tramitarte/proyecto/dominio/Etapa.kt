@@ -27,11 +27,12 @@ class Etapa1(): Etapa() {
     }
 
     override fun verificarEtapa(usuario: Usuario, tramite: Tramite) {
-        if(usuario.solicitudAvo != null) {
-            tramite.etapa = Etapa2("Cargar Documentación del usuario")
-        }
-        else {
-            ExcepcionDocumentacionInvalida("No se encontro un AVO (Descendiente verificado) valido")
+        try {
+            if(usuario.documentacionValida()) {
+                tramite.etapa = Etapa3("Buscar AVO con la cantidad de generaciones entre la persona y el AVO")
+            }
+        } catch (excepcionDocumentacionInvalida: ExcepcionDocumentacionInvalida){
+            throw ExcepcionDocumentacionInvalida("La documentación presentada no es valida")
         }
     }
 }
@@ -44,11 +45,13 @@ class Etapa2(): Etapa() {
     }
 
     override fun verificarEtapa(usuario: Usuario, tramite: Tramite) {
-        if(usuario.documentacionValidada) {
-            tramite.etapa = Etapa3("Descripcion Etapa 3")
-        }
-        else {
-            ExcepcionDocumentacionInvalida("La documentación presentada no es valida")
+        try {
+            if(usuario.documentacionValida()) {
+                tramite.etapa = Etapa3("Cargar documentación del solicitante: DNI,s frente y dorso," +
+                        "certificado de nacimiento")
+            }
+        } catch (excepcionDocumentacionInvalida: ExcepcionDocumentacionInvalida){
+            throw ExcepcionDocumentacionInvalida("La documentación presentada no es valida")
         }
     }
 }
@@ -61,7 +64,14 @@ class Etapa3(): Etapa() {
     }
 
     override fun verificarEtapa(usuario: Usuario, tramite: Tramite) {
-        // TODO("Not yet implemented")
+        try {
+            if(usuario.documentacionValida()) {
+                tramite.etapa = Etapa3("Cargar documentación de todos los familiares entre AVO y" +
+                        "solicitante (nacimiento, defunción, frente y dorso)")
+            }
+        } catch (excepcionDocumentacionInvalida: ExcepcionDocumentacionInvalida){
+            throw ExcepcionDocumentacionInvalida("La documentación presentada no es valida")
+        }
     }
 }
 
@@ -73,7 +83,13 @@ class Etapa4(): Etapa() {
     }
 
     override fun verificarEtapa(usuario: Usuario, tramite: Tramite) {
-        // TODO("Not yet implemented")
+        try {
+            if(usuario.documentacionValida()) {
+                tramite.etapa = Etapa3("Traducción de toda la documentación necesaria")
+            }
+        } catch (excepcionDocumentacionInvalida: ExcepcionDocumentacionInvalida){
+            throw ExcepcionDocumentacionInvalida("La documentación presentada no es valida")
+        }
     }
 }
 
@@ -85,6 +101,12 @@ class Etapa5(): Etapa() {
     }
 
     override fun verificarEtapa(usuario: Usuario, tramite: Tramite) {
-        // TODO("Not yet implemented")
+        try {
+            if(usuario.documentacionValida()) {
+                tramite.etapa = Etapa3("Final del tramite??")
+            }
+        } catch (excepcionDocumentacionInvalida: ExcepcionDocumentacionInvalida){
+            throw ExcepcionDocumentacionInvalida("La documentación presentada no es valida")
+        }
     }
 }
