@@ -53,11 +53,7 @@ class TramiteServiceTest {
 
     @Test
     fun eliminar_conTramiteExistente_eliminaTramite() {
-        val tramite = TramiteBuilder.conTramiteIniciado()
-                .conId(1)
-                .conCodigo(randomUUID().toString())
-                .conTipo("CIUDADANÍA")
-                .build()
+        val tramite = tramiteService.iniciarTramite()
         val tramitePersistido = tramiteRepository.save(tramite)
         val id: Long = tramitePersistido.id!!
         tramiteService.eliminar(id)

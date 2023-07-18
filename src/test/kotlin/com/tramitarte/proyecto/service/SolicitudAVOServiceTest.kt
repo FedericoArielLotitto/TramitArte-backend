@@ -20,7 +20,7 @@ class SolicitudAVOServiceTest {
     @Test
     fun guardar_conAVOaGuardar_retornaAVO() {
         val solicitudRecibida = SolicitudAVOBuilder
-            .conSolicitudInicializada()
+            .conSolicitudInicializada().conNombre("Nombre AVO").conApellido("Apellido AVO")
             .build()
 
         val solicitudAVO: SolicitudAVO = solicitudAVOService.guardar(solicitudRecibida)
@@ -32,7 +32,7 @@ class SolicitudAVOServiceTest {
     @Test
     fun guardar_conAVOAGuardarConNombre_retornaSolicitudAVOConNombre() {
         val solicitudRecibida = SolicitudAVOBuilder.conSolicitudInicializada()
-            .conNombre("Nombre AVO")
+            .conNombre("Nombre AVO").conApellido("Apellido AVO")
             .build()
 
         val solicitudPersistida = solicitudAVOService.guardar(solicitudRecibida)
