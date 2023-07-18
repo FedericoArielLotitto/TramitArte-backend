@@ -1,6 +1,7 @@
 package com.tramitarte.proyecto.controller
 
 import com.tramitarte.proyecto.dominio.Rol
+import com.tramitarte.proyecto.dominio.UpdateUserDTO
 import com.tramitarte.proyecto.dominio.Usuario
 import com.tramitarte.proyecto.service.UsuarioService
 import org.springframework.beans.factory.annotation.Autowired
@@ -43,10 +44,10 @@ class UsuarioRestController {
         }
     }
 
-    @PostMapping("/usuario/actualizar")
-    fun update(@RequestBody usuario: Usuario): ResponseEntity<Usuario> {
+    @PostMapping("/usuario/{id}")
+    fun update(@PathVariable id: Long, @RequestBody usuario: UpdateUserDTO): ResponseEntity<Usuario> {
         try {
-            return ResponseEntity.ok(usuarioService.actualizar(usuario))
+            return ResponseEntity.ok(usuarioService.actualizar(id, usuario))
         } catch (illegalArgumentExceptcion: IllegalArgumentException) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, illegalArgumentExceptcion.message)
         }
