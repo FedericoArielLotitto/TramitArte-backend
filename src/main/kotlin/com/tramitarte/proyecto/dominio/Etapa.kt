@@ -13,8 +13,8 @@ abstract class Etapa() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0
-    var descripcion: String = ""
+    open var id: Long = 0
+    open var descripcion: String = ""
 
     abstract fun verificarEtapa(usuario: Usuario, tramite: Tramite)
 }
