@@ -2,12 +2,14 @@ package com.tramitarte.proyecto.service
 
 import com.tramitarte.proyecto.builder.UsuarioBuilder
 import com.tramitarte.proyecto.dominio.Rol
+import com.tramitarte.proyecto.dominio.UpdateUserDTO
 import com.tramitarte.proyecto.dominio.Usuario
 import com.tramitarte.proyecto.repository.UsuarioRepository
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.time.LocalDate
 
 @SpringBootTest
 class UsuarioServiceTest {
@@ -74,5 +76,29 @@ class UsuarioServiceTest {
         assertThatIllegalArgumentException()
             .isThrownBy { usuarioService.buscarPorCorreoElectronico("a") }
             .withMessage("El formato del correo no es válido. Debe cumplir la forma nombrecorreo@dominio.extensionDeDominio.")
+    }
+
+    @Test
+    fun crearUsuario_Buscarlo_Actualizarlo() {
+        val correoElectronico = "ezeloyola3@gmail.com"
+        val usuarioNuevo = Usuario("jorgito", "jorge", "jorjiño", Rol.SOLICITANTE, 200f, "ezeloyola3@gmail.com", LocalDate.now().minusYears(23))
+        usuarioRepository.save(usuarioNuevo)
+        val usuarioEncontrado = usuarioService.buscarPorCorreoElectronico(correoElectronico)
+
+        assertThat(usuarioEncontrado.id).isNotNull()
+        assertThat(usuarioEncontrado.correoElectronico)
+        assertThat(usuarioEncontrado.nombre).isEqualTo("jorge")
+        assertThat(usuarioEncontrado.apellido).isEqualTo("jorjiño")
+        assertThat(usuarioEncontrado.username).isEqualTo("jorgito")
+        assertThat(usuarioEncontrado.fechaDeNacimiento).isEqualTo(LocalDate.now().minusYears(23))
+
+        usuarioService.actualizar(usuarioEncontrado.id, UpdateUserDTO("maria", "marianela", "mariela", LocalDate.now()))
+
+        val usuarioActualizado = usuarioService.buscarPorCorreoElectronico(correoElectronico)
+
+        assertThat(usuarioActualizado.nombre).isEqualTo("maria")
+        assertThat(usuarioActualizado.apellido).isEqualTo("marianela")
+        assertThat(usuarioActualizado.username).isEqualTo("mariela")
+        assertThat(usuarioActualizado.fechaDeNacimiento).isEqualTo(LocalDate.now())
     }
 }

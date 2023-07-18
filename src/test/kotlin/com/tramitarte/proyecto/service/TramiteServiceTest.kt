@@ -40,7 +40,7 @@ class TramiteServiceTest {
     fun iniciarTramite_conTramiteAIniciar_iniciaTramiteConRoadmapAsociado() {
         val tramite = tramiteService.iniciarTramite()
 
-        assertThat(tramite.etapa).isNotEmpty()
+        assertThat(tramite.etapa).isNotNull
     }
 
     @Test

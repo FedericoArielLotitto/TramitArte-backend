@@ -18,7 +18,7 @@ class Usuario(username: String, nombre: String, apellido: String, rol: Rol, prec
     var correoElectronico: String = correoElectronico
     var fechaDeNacimiento: LocalDate = fechaDeNacimiento
     @OneToMany
-    lateinit var documentacion: MutableList<Documentacion>
+    var documentacion: MutableList<Documentacion> = mutableListOf()
     @ManyToOne
     @JoinColumn(name = "avo_cargado")
     var solicitudAvo: SolicitudAVO? = null

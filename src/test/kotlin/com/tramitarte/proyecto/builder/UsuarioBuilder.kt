@@ -7,7 +7,7 @@ import com.tramitarte.proyecto.dominio.Usuario
 import java.time.LocalDate
 
 class UsuarioBuilder {
-    private val usuarioBase = Usuario(nombre = "nombreUsuario", apellido = "apellidoUsuario", rol = Rol.SOLICITANTE, correoElectronico = "correo@electronico.com")
+    private val usuarioBase = Usuario(username = "usernameUsuario", nombre = "nombreUsuario", apellido = "apellidoUsuario", rol = Rol.SOLICITANTE, precio = 200f, correoElectronico = "correo@electronico.com", fechaDeNacimiento = LocalDate.now())
     companion object {
         fun conUsuarioInicializado(): UsuarioBuilder = UsuarioBuilder()
     }

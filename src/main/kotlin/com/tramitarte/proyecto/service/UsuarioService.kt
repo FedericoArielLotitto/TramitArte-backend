@@ -34,8 +34,8 @@ class UsuarioService {
         return usuarioRepository.findByNombreAndAndApellidoAndPrecio(nombre, apellido, precio)
     }
 
-    fun actualizar(id: Long, update: UpdateUserDTO): Usuario {
-        if (!usuarioRepository.existsById(id)) throw IllegalArgumentException("No existe un usuario con ese id")
+    fun actualizar(id: Long?, update: UpdateUserDTO): Usuario {
+        if (!usuarioRepository.existsById(id!!)) throw IllegalArgumentException("No existe un usuario con ese id")
 
         val usuario = usuarioRepository.findById(id).get()
         usuario.updateUser(update)
