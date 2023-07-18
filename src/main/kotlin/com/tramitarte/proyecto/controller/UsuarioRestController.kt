@@ -43,6 +43,15 @@ class UsuarioRestController {
         }
     }
 
+    @PostMapping("/usuario/actualizar")
+    fun update(@RequestBody usuario: Usuario): ResponseEntity<Usuario> {
+        try {
+            return ResponseEntity.ok(usuarioService.actualizar(usuario))
+        } catch (illegalArgumentExceptcion: IllegalArgumentException) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, illegalArgumentExceptcion.message)
+        }
+    }
+
     @GetMapping("/usuario")
     fun buscarPorCorreoElectronico(@RequestBody correoElectronico: String): ResponseEntity<Usuario> {
         try {
