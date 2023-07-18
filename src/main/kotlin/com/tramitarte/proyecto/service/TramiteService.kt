@@ -3,6 +3,8 @@ package com.tramitarte.proyecto.service
 import com.tramitarte.proyecto.dominio.Documentacion
 import com.tramitarte.proyecto.dominio.Etapa1
 import com.tramitarte.proyecto.dominio.Tramite
+import com.tramitarte.proyecto.repository.DocumentoRepository
+import com.tramitarte.proyecto.repository.EtapaRepository
 import com.tramitarte.proyecto.repository.TramiteRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -14,9 +16,17 @@ class TramiteService {
 
     @Autowired
     lateinit var tramiteRepository: TramiteRepository
+    @Autowired
+    lateinit var documentoRepository: DocumentoRepository
+    @Autowired
+    lateinit var etapaRepository: EtapaRepository
 
     fun iniciarTramite(): Tramite {
-        val tramite = Tramite(codigo = randomUUID().toString(), tipo = "CIUDADANÍA", etapa = "CARGAR AVO")
+        val tramite = Tramite(codigo = randomUUID().toString(), tipo = "CIUDADANÍA", etapa = Etapa1("Cargar AVO"))
+        documentoRepository.save(tramite.documentacionAVO)
+        documentoRepository.save(tramite.documentacionDescendientes)
+        documentoRepository.save(tramite.documentacionUsuario)
+        etapaRepository.save(tramite.etapa)
         return tramiteRepository.save(tramite)
     }
 

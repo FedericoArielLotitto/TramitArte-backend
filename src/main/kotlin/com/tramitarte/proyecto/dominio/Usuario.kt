@@ -14,18 +14,9 @@ class Usuario(username: String, nombre: String, apellido: String, rol: Rol, prec
     var apellido: String = apellido
     var rol: Rol = rol
     var precio: Float = precio
-    var nesecitaTraduccion: Boolean = false
     var correoElectronico: String = correoElectronico
     var fechaDeNacimiento: LocalDate = fechaDeNacimiento
-    @OneToMany
-    var documentacion: MutableList<Documentacion> = mutableListOf()
-    @ManyToOne
-    @JoinColumn(name = "avo_cargado")
-    var solicitudAvo: SolicitudAVO? = null
-
-    fun cargarAvo(avo: SolicitudAVO) {
-        solicitudAvo = avo
-    }
+    var nesecitaTraduccion: Boolean = false
 
     fun updateUser(update: UpdateUserDTO){
         nombre = update.name
@@ -33,6 +24,4 @@ class Usuario(username: String, nombre: String, apellido: String, rol: Rol, prec
         username = update.username
         fechaDeNacimiento = update.birthdate
     }
-
-    fun documentacionValida(): Boolean = true
 }

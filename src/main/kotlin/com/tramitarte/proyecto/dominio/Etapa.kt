@@ -4,6 +4,7 @@ import com.tramitarte.proyecto.exepciones.ExcepcionDocumentacionInvalida
 import jakarta.persistence.*
 
 @Entity
+@Inheritance(strategy= InheritanceType.SINGLE_TABLE)
 abstract class Etapa() {
     constructor(
         _descripcion: String
@@ -16,9 +17,10 @@ abstract class Etapa() {
     open var id: Long = 0
     open var descripcion: String = ""
 
-    abstract fun verificarEtapa(usuario: Usuario, tramite: Tramite)
+    abstract fun verificarEtapa(tramite: Tramite)
 }
 
+@Entity
 class Etapa1(): Etapa() {
     constructor(
         _descripcion: String
@@ -26,17 +28,18 @@ class Etapa1(): Etapa() {
         descripcion = _descripcion
     }
 
-    override fun verificarEtapa(usuario: Usuario, tramite: Tramite) {
-        try {
-            if(usuario.documentacionValida()) {
-                tramite.etapa = Etapa3("Buscar AVO con la cantidad de generaciones entre la persona y el AVO")
-            }
-        } catch (excepcionDocumentacionInvalida: ExcepcionDocumentacionInvalida){
-            throw ExcepcionDocumentacionInvalida("La documentación presentada no es valida")
+    override var descripcion: String = "Cargar AVO"
+
+    override fun verificarEtapa(tramite: Tramite) {
+        if(!tramite.solicitudAvo!!.validar()) {
+            throw ExcepcionDocumentacionInvalida("Los datos del AVO no son validos")
         }
+
+        tramite.etapa = Etapa2("Cargar documentacion de usuario")
     }
 }
 
+@Entity
 class Etapa2(): Etapa() {
     constructor(
         _descripcion: String
@@ -44,18 +47,15 @@ class Etapa2(): Etapa() {
         descripcion = _descripcion
     }
 
-    override fun verificarEtapa(usuario: Usuario, tramite: Tramite) {
-        try {
-            if(usuario.documentacionValida()) {
-                tramite.etapa = Etapa3("Cargar documentación del solicitante: DNI,s frente y dorso," +
-                        "certificado de nacimiento")
-            }
-        } catch (excepcionDocumentacionInvalida: ExcepcionDocumentacionInvalida){
+    override fun verificarEtapa(tramite: Tramite) {
+        if(!tramite.documentacionUsuario.validar()) {
             throw ExcepcionDocumentacionInvalida("La documentación presentada no es valida")
         }
+        tramite.etapa = Etapa3("Cargar documentación de los descendientes entre AVO y solicitante")
     }
 }
 
+@Entity
 class Etapa3(): Etapa() {
     constructor(
         _descripcion: String
@@ -63,18 +63,15 @@ class Etapa3(): Etapa() {
         descripcion = _descripcion
     }
 
-    override fun verificarEtapa(usuario: Usuario, tramite: Tramite) {
-        try {
-            if(usuario.documentacionValida()) {
-                tramite.etapa = Etapa3("Cargar documentación de todos los familiares entre AVO y" +
-                        "solicitante (nacimiento, defunción, frente y dorso)")
-            }
-        } catch (excepcionDocumentacionInvalida: ExcepcionDocumentacionInvalida){
+    override fun verificarEtapa(tramite: Tramite) {
+        if(!tramite.documentacionAVO.validar() || !tramite.documentacionDescendientes.validar()) {
             throw ExcepcionDocumentacionInvalida("La documentación presentada no es valida")
         }
+        tramite.etapa = Etapa4("Traducir los documentos necesarios")
     }
 }
 
+@Entity
 class Etapa4(): Etapa() {
     constructor(
         _descripcion: String
@@ -82,17 +79,16 @@ class Etapa4(): Etapa() {
         descripcion = _descripcion
     }
 
-    override fun verificarEtapa(usuario: Usuario, tramite: Tramite) {
-        try {
-            if(usuario.documentacionValida()) {
-                tramite.etapa = Etapa3("Traducción de toda la documentación necesaria")
-            }
-        } catch (excepcionDocumentacionInvalida: ExcepcionDocumentacionInvalida){
-            throw ExcepcionDocumentacionInvalida("La documentación presentada no es valida")
+    override fun verificarEtapa(tramite: Tramite) {
+        if(tramite.documentacionTraducida.isEmpty()) {
+            throw ExcepcionDocumentacionInvalida("El tramite no tiene documentos traducidos")
         }
+        tramite.etapa = Etapa5("Felicidades, ya tiene todo lo necesario para presentarse al " +
+                "consuldado y pedir su ciudadania")
     }
 }
 
+@Entity
 class Etapa5(): Etapa() {
     constructor(
         _descripcion: String
@@ -100,13 +96,5 @@ class Etapa5(): Etapa() {
         descripcion = _descripcion
     }
 
-    override fun verificarEtapa(usuario: Usuario, tramite: Tramite) {
-        try {
-            if(usuario.documentacionValida()) {
-                tramite.etapa = Etapa3("Final del tramite??")
-            }
-        } catch (excepcionDocumentacionInvalida: ExcepcionDocumentacionInvalida){
-            throw ExcepcionDocumentacionInvalida("La documentación presentada no es valida")
-        }
-    }
+    override fun verificarEtapa(tramite: Tramite) {}
 }
