@@ -7,14 +7,14 @@ import jakarta.persistence.*
 abstract class Documento{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0
+    open var id: Long = 0
 
     @OneToOne
-    var dniFrente: Documentacion? = null
+    open var dniFrente: Documentacion? = null
     @OneToOne
-    var dniDorso: Documentacion? = null
+    open var dniDorso: Documentacion? = null
     @OneToOne
-    var certificadoNacimiento: Documentacion? = null
+    open var certificadoNacimiento: Documentacion? = null
 
 
     abstract fun validar(): Boolean
