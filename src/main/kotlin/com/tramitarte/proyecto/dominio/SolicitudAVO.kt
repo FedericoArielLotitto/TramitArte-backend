@@ -22,4 +22,6 @@ class SolicitudAVO(
     @JsonFormat(pattern = "dd/MM/yyyy")
     var fechaNacimiento: LocalDate = fechaNacimiento
     var sexo: Sexo = sexo
+
+    fun validar(): Boolean = nombre.isNotBlank() && apellido.isNotBlank() && fechaNacimiento.isBefore(LocalDate.now())
 }

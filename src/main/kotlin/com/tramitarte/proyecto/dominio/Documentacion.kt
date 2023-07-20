@@ -12,4 +12,6 @@ class Documentacion(nombre: String, archivoBase64: String) {
     var id: Long? = null
     var nombre: String = nombre
     var archivoBase64: String = archivoBase64
+
+    fun validarDocumentacion(): Boolean = true
 }

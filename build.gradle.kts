@@ -25,6 +25,8 @@ repositories {
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	//implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("net.sourceforge.tess4j:tess4j:5.7.0")
+	implementation("org.apache.pdfbox:pdfbox:2.0.29")
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")

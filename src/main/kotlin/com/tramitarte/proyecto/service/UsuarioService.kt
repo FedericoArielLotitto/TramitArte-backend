@@ -1,11 +1,13 @@
 package com.tramitarte.proyecto.service
 
 import com.tramitarte.proyecto.dominio.Rol
+import com.tramitarte.proyecto.dominio.UpdateUserDTO
 import com.tramitarte.proyecto.dominio.Usuario
 import com.tramitarte.proyecto.repository.UsuarioRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class UsuarioService {
@@ -26,6 +28,19 @@ class UsuarioService {
         } catch (exception: EmptyResultDataAccessException) {
             throw IllegalArgumentException("No existe un usuario registrado con ese correo electrónico.", exception)
         }
+    }
+
+    fun buscarPorNombreYPrecio(nombre: Optional<String>, apellido: Optional<String>, precio: Optional<Float>): Usuario {
+        return usuarioRepository.findByNombreAndAndApellidoAndPrecio(nombre, apellido, precio)
+    }
+
+    fun actualizar(id: Long?, update: UpdateUserDTO): Usuario {
+        if (!usuarioRepository.existsById(id!!)) throw IllegalArgumentException("No existe un usuario con ese id")
+
+        val usuario = usuarioRepository.findById(id).get()
+        usuario.updateUser(update)
+
+        return usuarioRepository.save(usuario)
     }
 
     private fun validarFormatoCorreoElectronico(correoElectonico: String) {
