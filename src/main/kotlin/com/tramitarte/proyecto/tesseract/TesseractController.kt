@@ -24,4 +24,7 @@ class TesseractController {
 
     @GetMapping("/api/ocr/image/is_dni_dorso")
     fun isDniDorso(@RequestParam img: MultipartFile): Boolean = tesseractService.isDniDorso(img.inputStream)
+
+    @GetMapping("api/ocr/pdf/is_certificate")
+    fun isCertificate(@RequestParam file: MultipartFile): Boolean = tesseractService.isCertificate(file.inputStream)
 }

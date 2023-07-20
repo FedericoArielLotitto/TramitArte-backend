@@ -44,6 +44,26 @@ class TesseractService {
         return containsPhraseDorso(text)
     }
 
+    fun isCertificate(file: InputStream): Boolean {
+        val text = recognizedPDF(file)
+        return containsPhrasePDF(text)
+    }
+
+    private fun containsPhrasePDF(text: String): Boolean{
+        val textMin = text.lowercase()
+
+        val phraseCertificate = "registro del estado civil y capacidad de las personas"
+        val phraseCertificate2 = "registro provincial de las personas"
+        val phraseBirthCertificate = "nacimiento"
+        val phraseMarriageCertificate = "matrimonio"
+        val phraseDeathCertificate1 = "defunción"
+        val phraseDeathCertificate2 = "falleció"
+
+        return (textMin.contains(phraseBirthCertificate) && (textMin.contains(phraseCertificate) || textMin.contains(phraseCertificate2)))
+                || (textMin.contains(phraseMarriageCertificate) && (textMin.contains(phraseCertificate) || textMin.contains(phraseCertificate2)))
+                || ((textMin.contains(phraseDeathCertificate1) && textMin.contains(phraseDeathCertificate2)) && (textMin.contains(phraseCertificate) || textMin.contains(phraseCertificate2)))
+    }
+
     // Como los dni tienen un dibujo por detras de los caracteres, tesseract no puede distinguir a veces bien los
     // caracteres, esto va a depender del angulo y calidad de la foto del dni, como minimo se tienen que registrar
     // algunas de las siguientes frases o patrones
