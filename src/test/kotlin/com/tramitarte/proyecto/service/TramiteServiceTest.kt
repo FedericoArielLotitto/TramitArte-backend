@@ -2,6 +2,8 @@ package com.tramitarte.proyecto.service
 
 import com.tramitarte.proyecto.builder.TramiteBuilder
 import com.tramitarte.proyecto.documentacion.DocumentacionAVO
+import com.tramitarte.proyecto.documentacion.DocumentacionDescendientes
+import com.tramitarte.proyecto.documentacion.DocumentacionUsuario
 import com.tramitarte.proyecto.documentacion.Documento
 import com.tramitarte.proyecto.dominio.Documentacion
 import com.tramitarte.proyecto.dominio.Sexo
@@ -14,6 +16,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 import java.util.UUID.randomUUID
 
@@ -24,6 +27,8 @@ class TramiteServiceTest {
     private lateinit var tramiteService: TramiteService
     @Autowired
     private lateinit var tramiteRepository: TramiteRepository
+    @Autowired
+    private lateinit var solicitudAVOService: SolicitudAVOService
 
     @Test
     fun iniciarTramite_conTramiteIniciado_iniciaTramite() {
@@ -61,6 +66,7 @@ class TramiteServiceTest {
     }
 
     @Test
+    @Transactional
     fun avanzar_etapas(){
         val documento = Documentacion("algo","saasdfsfd")
         val tramite = tramiteService.iniciarTramite()
@@ -72,13 +78,15 @@ class TramiteServiceTest {
 
         assertThat(tramite.etapa.descripcion).isEqualTo("Cargar AVO")
 
-        var solicitudAVO = SolicitudAVO("","", LocalDate.now(),Sexo.MASCULINO)
-        tramite.solicitudAvo = solicitudAVO
+        var solicitudAVO = SolicitudAVO("jorge", "jorgelin", LocalDate.now(), Sexo.MASCULINO)
+
+        solicitudAVOService.guardar(tramite.id!!, solicitudAVO)
 
         assertThrows<ExcepcionDocumentacionInvalida> { tramite.avanzarEtapa() }
 
-        solicitudAVO = SolicitudAVO("mario","jose", LocalDate.now().minusYears(60),Sexo.MASCULINO)
-        tramite.solicitudAvo = solicitudAVO
+        solicitudAVO = SolicitudAVO("jorge", "jorgelin", LocalDate.now().minusYears(26), Sexo.MASCULINO)
+
+        solicitudAVOService.guardar(tramite.id!!, solicitudAVO)
 
         //etapa 2
         tramite.avanzarEtapa()
@@ -87,12 +95,19 @@ class TramiteServiceTest {
 
         assertThrows<ExcepcionDocumentacionInvalida> { tramite.avanzarEtapa() }
 
-        tramite.documentacionUsuario.dniDorso = documento
-        tramite.documentacionUsuario.dniFrente = documento
+        val documentacionUsuario = DocumentacionUsuario()
+
+        tramiteService.cargaDocumentacionUsuario(tramite.id!!, documentacionUsuario)
 
         assertThrows<ExcepcionDocumentacionInvalida> { tramite.avanzarEtapa() }
 
-        tramite.documentacionUsuario.certificadoNacimiento = documento
+        val documentacionUsuario2 = DocumentacionUsuario().apply {
+            dniFrente = documento
+            dniDorso = documento
+            certificadoNacimiento = documento
+        }
+
+        tramiteService.cargaDocumentacionUsuario(tramite.id!!, documentacionUsuario2)
 
         //etapa 3
         tramite.avanzarEtapa()
@@ -101,30 +116,32 @@ class TramiteServiceTest {
 
         assertThrows<ExcepcionDocumentacionInvalida> { tramite.avanzarEtapa() }
 
-        tramite.documentacionDescendientes.agregarDescendiente(DocumentacionAVO())
-        tramite.documentacionDescendientes.agregarDescendiente(DocumentacionAVO())
+        val documentacionAVO = DocumentacionAVO().apply {
+            dniFrente = documento
+            dniDorso = documento
+            certificadoDefunsion = documento
+            certificadoNacimiento = documento
+            certificadoNacimiento = documento
+        }
 
-        tramite.documentacionAVO.dniDorso = documento
-        tramite.documentacionAVO.dniFrente = documento
-        tramite.documentacionAVO.certificadoNacimiento = documento
-        tramite.documentacionAVO.certificadoDefunsion = documento
-        tramite.documentacionAVO.certificadoMatrimonio = documento
+        val documentacionAVOVacio = DocumentacionAVO()
+
+        val documentacionDescendientes = DocumentacionDescendientes().apply {
+            this.agregarDescendiente(documentacionAVOVacio)
+            this.agregarDescendiente(documentacionAVOVacio)
+        }
+
+        tramiteService.cargaDocumentacionAVO(tramite.id!!, documentacionAVO)
+        tramiteService.cargaDocumentacionDescendientes(tramite.id!!, documentacionDescendientes)
 
         assertThrows<ExcepcionDocumentacionInvalida> { tramite.avanzarEtapa() }
 
-        tramite.documentacionDescendientes.descendientes[0].dniDorso = documento
-        tramite.documentacionDescendientes.descendientes[0].dniFrente = documento
-        tramite.documentacionDescendientes.descendientes[0].certificadoNacimiento = documento
-        tramite.documentacionDescendientes.descendientes[0].certificadoDefunsion = documento
-        tramite.documentacionDescendientes.descendientes[0].certificadoMatrimonio = documento
+        val documentacionDescendientesCompleta = DocumentacionDescendientes().apply {
+            this.agregarDescendiente(documentacionAVO)
+            this.agregarDescendiente(documentacionAVO)
+        }
 
-        assertThrows<ExcepcionDocumentacionInvalida> { tramite.avanzarEtapa() }
-
-        tramite.documentacionDescendientes.descendientes[1].dniDorso = documento
-        tramite.documentacionDescendientes.descendientes[1].dniFrente = documento
-        tramite.documentacionDescendientes.descendientes[1].certificadoNacimiento = documento
-        tramite.documentacionDescendientes.descendientes[1].certificadoDefunsion = documento
-        tramite.documentacionDescendientes.descendientes[1].certificadoMatrimonio = documento
+        tramiteService.cargaDocumentacionDescendientes(tramite.id!!, documentacionDescendientesCompleta)
 
         //etapa 4
         tramite.avanzarEtapa()
@@ -133,11 +150,22 @@ class TramiteServiceTest {
 
         assertThrows<ExcepcionDocumentacionInvalida> { tramite.avanzarEtapa() }
 
-        tramite.documentacionTraducida.add(documento)
+        assertThat(tramite.adjuntosATraducir.size).isEqualTo(7)
+
+        val documentosTraducidos = mutableListOf(documento, documento, documento, documento, documento, documento)
+
+        tramiteService.cargarDocumentacionTraducida(tramite.id!!, documentosTraducidos)
+
+        assertThrows<ExcepcionDocumentacionInvalida> { tramite.avanzarEtapa() }
+
+        documentosTraducidos.add(documento)
+
+        tramiteService.cargarDocumentacionTraducida(tramite.id!!, documentosTraducidos)
 
         //etapa 5
         tramite.avanzarEtapa()
 
-        assertThat(tramite.etapa.descripcion).isEqualTo("Felicidades, ya tiene todo lo necesario para presentarse al consuldado y pedir su ciudadania")
+        assertThat(tramite.etapa.descripcion).isEqualTo("Felicidades, ya tiene todo lo necesario para presentarse al " +
+                "consuldado y pedir su ciudadania")
     }
 }
