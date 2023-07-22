@@ -19,7 +19,7 @@ class Tramite(codigo: String, tipo: String, etapa: Etapa) {
     @JoinColumn(name = "usuario_id")
     var usuario: Usuario? = null
     @OneToMany
-    var adjuntos = mutableListOf<Documentacion>()
+    var adjuntosATraducir = mutableListOf<Documentacion>()
     @OneToOne
     var documentacionUsuario: DocumentacionUsuario = DocumentacionUsuario()
     @OneToOne
@@ -35,6 +35,8 @@ class Tramite(codigo: String, tipo: String, etapa: Etapa) {
     fun cargarAvo(avo: SolicitudAVO) {
         solicitudAvo = avo
     }
+
+    fun tieneDocumentacionTraducirda(): Boolean = documentacionTraducida.size == adjuntosATraducir.size
 
     fun avanzarEtapa(): Unit {
         etapa.verificarEtapa(this)

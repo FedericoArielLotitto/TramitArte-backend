@@ -14,16 +14,21 @@ import java.time.LocalDate
 class SolicitudAVOServiceTest {
     @Autowired
     lateinit var solicitudAVOService: SolicitudAVOService
+    @Autowired
+    lateinit var tramiteService: TramiteService
 
     @Autowired
     lateinit var solicitudAVORepository: SolicitudAVORepository
     @Test
     fun guardar_conAVOaGuardar_retornaAVO() {
+        val tramite = tramiteService.iniciarTramite()
+        assertThat(tramite).isNotNull()
+        assertThat(tramite.id).isNotNull()
         val solicitudRecibida = SolicitudAVOBuilder
             .conSolicitudInicializada().conNombre("Nombre AVO").conApellido("Apellido AVO")
             .build()
 
-        val solicitudAVO: SolicitudAVO = solicitudAVOService.guardar(solicitudRecibida)
+        val solicitudAVO: SolicitudAVO = solicitudAVOService.guardar(tramite.id!!, solicitudRecibida)
 
         assertThat(solicitudAVO).isNotNull()
         assertThat(solicitudAVO.id).isNotNull()
@@ -31,35 +36,44 @@ class SolicitudAVOServiceTest {
 
     @Test
     fun guardar_conAVOAGuardarConNombre_retornaSolicitudAVOConNombre() {
+        val tramite = tramiteService.iniciarTramite()
+        assertThat(tramite).isNotNull()
+        assertThat(tramite.id).isNotNull()
         val solicitudRecibida = SolicitudAVOBuilder.conSolicitudInicializada()
             .conNombre("Nombre AVO").conApellido("Apellido AVO")
             .build()
 
-        val solicitudPersistida = solicitudAVOService.guardar(solicitudRecibida)
+        val solicitudPersistida = solicitudAVOService.guardar(tramite.id!!, solicitudRecibida)
 
         assertThat(solicitudPersistida.nombre).isNotEmpty()
     }
 
     @Test
     fun guardar_conAVOAGuardarConApellido_retornaSolicitudAVOConApellido() {
+        val tramite = tramiteService.iniciarTramite()
+        assertThat(tramite).isNotNull()
+        assertThat(tramite.id).isNotNull()
         val solicitudRecibida = SolicitudAVOBuilder.conSolicitudInicializada()
             .conNombre("Nombre AVO")
             .conApellido("Apellido AVO")
             .build()
 
-        val solicitudPersistida = solicitudAVOService.guardar(solicitudRecibida)
+        val solicitudPersistida = solicitudAVOService.guardar(tramite.id!!, solicitudRecibida)
 
         assertThat(solicitudPersistida.apellido).isNotEmpty()
     }
 
     @Test
     fun guardar_conAVOAGuardarConFechaNacimiento_retornaSolicitudAVOConFechaNacimiento() {
+        val tramite = tramiteService.iniciarTramite()
+        assertThat(tramite).isNotNull()
+        assertThat(tramite.id).isNotNull()
         val solicitudRecibida = SolicitudAVOBuilder.conSolicitudInicializada()
             .conNombre("NombreAVO")
             .conApellido("ApellidoAVO")
             .build()
 
-        val solicitudPersistida = solicitudAVOService.guardar(solicitudRecibida)
+        val solicitudPersistida = solicitudAVOService.guardar(tramite.id!!, solicitudRecibida)
 
         assertThat(solicitudPersistida.fechaNacimiento).isNotNull()
         assertThat(solicitudPersistida.fechaNacimiento).isAfter(LocalDate.now().minusYears(200))
@@ -67,19 +81,25 @@ class SolicitudAVOServiceTest {
 
     @Test
     fun guardar_conAVOAGuardarConSexo_retornaSolicitudAVOConSexo() {
+        val tramite = tramiteService.iniciarTramite()
+        assertThat(tramite).isNotNull()
+        assertThat(tramite.id).isNotNull()
         val solicitudRecibida = SolicitudAVOBuilder.conSolicitudInicializada()
             .conNombre("NombreAVO")
             .conApellido("ApellidoAVO")
             .conSexo(Sexo.MASCULINO)
             .build()
 
-        val solicitudPersistida = solicitudAVOService.guardar(solicitudRecibida)
+        val solicitudPersistida = solicitudAVOService.guardar(tramite.id!!, solicitudRecibida)
 
         assertThat(solicitudPersistida.sexo).isEqualTo(Sexo.MASCULINO)
     }
 
     @Test
     fun guardar_conNombreVacio_lanzaExcepcion() {
+        val tramite = tramiteService.iniciarTramite()
+        assertThat(tramite).isNotNull()
+        assertThat(tramite.id).isNotNull()
         val solicitudRecibida = SolicitudAVOBuilder.conSolicitudInicializada()
             .conNombre("")
             .conApellido("Apellido")
@@ -87,12 +107,15 @@ class SolicitudAVOServiceTest {
             .build()
 
         assertThatIllegalArgumentException()
-            .isThrownBy{ solicitudAVOService.guardar(solicitudRecibida) }
+            .isThrownBy{ solicitudAVOService.guardar(tramite.id!!, solicitudRecibida) }
             .withMessage("El nombre del AVO es obligatorio.")
     }
 
     @Test
     fun guardar_conApellidoVacio_lanzaExcepcion() {
+        val tramite = tramiteService.iniciarTramite()
+        assertThat(tramite).isNotNull()
+        assertThat(tramite.id).isNotNull()
         val solicitudRecibida = SolicitudAVOBuilder.conSolicitudInicializada()
             .conNombre("Nombre")
             .conApellido("")
@@ -100,7 +123,7 @@ class SolicitudAVOServiceTest {
             .build()
 
         assertThatIllegalArgumentException()
-            .isThrownBy{ solicitudAVOService.guardar(solicitudRecibida) }
+            .isThrownBy{ solicitudAVOService.guardar(tramite.id!!, solicitudRecibida) }
             .withMessage("El apellido del AVO es obligatorio.")
     }
 

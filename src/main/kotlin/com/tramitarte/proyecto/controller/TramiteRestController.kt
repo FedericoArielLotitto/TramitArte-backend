@@ -1,10 +1,15 @@
 package com.tramitarte.proyecto.controller
 
+import com.tramitarte.proyecto.documentacion.DocumentacionAVO
+import com.tramitarte.proyecto.documentacion.DocumentacionDescendientes
+import com.tramitarte.proyecto.documentacion.DocumentacionUsuario
 import com.tramitarte.proyecto.dominio.Documentacion
+import com.tramitarte.proyecto.dominio.Etapa
 import com.tramitarte.proyecto.dominio.SolicitudAVO
 import com.tramitarte.proyecto.dominio.Tramite
 import com.tramitarte.proyecto.service.SolicitudAVOService
 import com.tramitarte.proyecto.service.TramiteService
+import org.apache.coyote.Response
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
@@ -41,23 +46,50 @@ class TramiteRestController {
         }
     }
 
-    @PostMapping("/carga-avo")
-    fun cargarAVO(@RequestBody solicitud: SolicitudAVO): ResponseEntity<SolicitudAVO> {
+    @PostMapping("/carga-avo/{id}")
+    fun cargarAVO(@PathVariable id: Long, @RequestBody solicitud: SolicitudAVO): ResponseEntity<SolicitudAVO> {
         try {
-            var avo = solicitudAVOService.guardar(solicitud)
+            var avo = solicitudAVOService.guardar(id, solicitud)
             return ResponseEntity(avo, HttpStatus.OK)
         } catch (exception: IllegalArgumentException) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, exception.message)
         }
     }
 
-    @PatchMapping("/tramite")
-    fun cargarDocumentacionAVO(@PathVariable id: Long, @RequestBody documentacion: Documentacion): ResponseEntity<Tramite> {
+    @PostMapping("/carga/documentacion/usuario/{id}")
+    fun cargaDocumentacionUsuario(@PathVariable id: Long, @RequestBody documentacionUsuario: DocumentacionUsuario): ResponseEntity<DocumentacionUsuario>{
         try {
-            var tramiteIniciado = tramiteService.guardarDocumentacion(id, documentacion)
-            return ResponseEntity(tramiteIniciado, HttpStatus.OK)
+            return tramiteService.cargaDocumentacionUsuario(id, documentacionUsuario)
         } catch (exception: IllegalArgumentException) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, exception.message)
         }
     }
+
+    @PostMapping("/carga/documentacion/avo/{id}")
+    fun cargaDocumentacionAVO(@PathVariable id: Long, @RequestBody documentacionAVO: DocumentacionAVO): ResponseEntity<DocumentacionAVO>{
+        try {
+            return tramiteService.cargaDocumentacionAVO(id, documentacionAVO)
+        } catch (exception: IllegalArgumentException) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, exception.message)
+        }
+    }
+
+    @PostMapping("/carga/documentacion/descendientes/{id}")
+    fun cargaDocumentacionDescendientes(@PathVariable id: Long, @RequestBody documentacionDescendientes: DocumentacionDescendientes): ResponseEntity<DocumentacionDescendientes>{
+        try {
+            return tramiteService.cargaDocumentacionDescendientes(id, documentacionDescendientes)
+        } catch (exception: IllegalArgumentException) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, exception.message)
+        }
+    }
+
+    @PostMapping("/avanzar-etapa/{id}")
+    fun avanzarEtapa(@PathVariable id: Long): ResponseEntity<Etapa>{
+        try {
+            return tramiteService.avanzarEtapa(id)
+        } catch (exception: IllegalArgumentException) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, exception.message)
+        }
+    }
+
 }

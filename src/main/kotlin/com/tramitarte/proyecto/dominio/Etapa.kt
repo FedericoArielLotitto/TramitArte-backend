@@ -80,7 +80,7 @@ class Etapa4(): Etapa() {
     }
 
     override fun verificarEtapa(tramite: Tramite) {
-        if(tramite.documentacionTraducida.isEmpty()) {
+        if(!tramite.tieneDocumentacionTraducirda()) {
             throw ExcepcionDocumentacionInvalida("El tramite no tiene documentos traducidos")
         }
         tramite.etapa = Etapa5("Felicidades, ya tiene todo lo necesario para presentarse al " +
