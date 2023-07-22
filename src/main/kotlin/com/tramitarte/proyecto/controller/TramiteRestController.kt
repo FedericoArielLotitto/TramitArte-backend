@@ -3,10 +3,7 @@ package com.tramitarte.proyecto.controller
 import com.tramitarte.proyecto.documentacion.DocumentacionAVO
 import com.tramitarte.proyecto.documentacion.DocumentacionDescendientes
 import com.tramitarte.proyecto.documentacion.DocumentacionUsuario
-import com.tramitarte.proyecto.dominio.Documentacion
-import com.tramitarte.proyecto.dominio.Etapa
-import com.tramitarte.proyecto.dominio.SolicitudAVO
-import com.tramitarte.proyecto.dominio.Tramite
+import com.tramitarte.proyecto.dominio.*
 import com.tramitarte.proyecto.service.SolicitudAVOService
 import com.tramitarte.proyecto.service.TramiteService
 import org.apache.coyote.Response
@@ -35,6 +32,10 @@ class TramiteRestController {
     @Autowired
     lateinit var solicitudAVOService: SolicitudAVOService
 
+    @GetMapping("/tramite/usuario/{idUsuario}")
+    fun buscarTramitePorUsuario(@PathVariable idUsuario: Long) :Tramite{
+        return Tramite("", "", Etapa1("etapa 1"))
+    }
     @PostMapping("/tramite")
     fun iniciarTramite(): ResponseEntity<Tramite> {
         //buscar usuario a partir del logueado y sumarlo a su lista de trámites
