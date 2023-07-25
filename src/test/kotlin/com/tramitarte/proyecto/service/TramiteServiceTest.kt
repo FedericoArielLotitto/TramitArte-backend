@@ -1,15 +1,15 @@
 package com.tramitarte.proyecto.service
 
 import com.tramitarte.proyecto.builder.TramiteBuilder
+import com.tramitarte.proyecto.builder.UsuarioBuilder
 import com.tramitarte.proyecto.documentacion.DocumentacionAVO
 import com.tramitarte.proyecto.documentacion.DocumentacionDescendientes
 import com.tramitarte.proyecto.documentacion.DocumentacionUsuario
 import com.tramitarte.proyecto.documentacion.Documento
-import com.tramitarte.proyecto.dominio.Documentacion
-import com.tramitarte.proyecto.dominio.Sexo
-import com.tramitarte.proyecto.dominio.SolicitudAVO
+import com.tramitarte.proyecto.dominio.*
 import com.tramitarte.proyecto.exepciones.ExcepcionDocumentacionInvalida
 import com.tramitarte.proyecto.repository.TramiteRepository
+import com.tramitarte.proyecto.repository.UsuarioRepository
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
@@ -29,6 +29,8 @@ class TramiteServiceTest {
     private lateinit var tramiteRepository: TramiteRepository
     @Autowired
     private lateinit var solicitudAVOService: SolicitudAVOService
+    @Autowired
+    private lateinit var usuarioRepository: UsuarioRepository
 
     @Test
     fun iniciarTramite_conTramiteIniciado_iniciaTramite() {
@@ -63,6 +65,15 @@ class TramiteServiceTest {
         val id: Long = tramitePersistido.id!!
         tramiteService.eliminar(id)
         assertFalse(tramiteRepository.existsById(id))
+    }
+
+    @Test
+    fun buscarPorUsuario_conUsuarioSinTramite_retornaNull() {
+        val usuario: Usuario = UsuarioBuilder.conUsuarioInicializado().conNombre("usuario").conApellido("apellido").build()
+        val usuarioPersistido: Usuario = usuarioRepository.save(usuario)
+
+        val tramite: Tramite? = tramiteService.buscarPorUsuario(usuarioPersistido)
+        assertThat(tramite).isNull()
     }
 
     @Test
@@ -168,4 +179,6 @@ class TramiteServiceTest {
         assertThat(tramite.etapa.descripcion).isEqualTo("Felicidades, ya tiene todo lo necesario para presentarse al " +
                 "consuldado y pedir su ciudadania")
     }
+
+
 }

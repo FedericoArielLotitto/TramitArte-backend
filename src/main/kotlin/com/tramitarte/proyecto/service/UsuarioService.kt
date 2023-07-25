@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.stereotype.Service
 import java.util.*
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class UsuarioService {
@@ -15,6 +16,10 @@ class UsuarioService {
     lateinit var usuarioRepository: UsuarioRepository
     fun buscarPorRol(rol: Rol): List<Usuario> {
         return usuarioRepository.findAll()
+    }
+
+    fun buscarPorId(id: Long): Usuario? {
+        return usuarioRepository.findById(id).getOrNull()
     }
 
     fun crear(usuario: Usuario): Usuario {

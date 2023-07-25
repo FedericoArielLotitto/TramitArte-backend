@@ -4,10 +4,7 @@ import com.tramitarte.proyecto.documentacion.DocumentacionAVO
 import com.tramitarte.proyecto.documentacion.DocumentacionDescendientes
 import com.tramitarte.proyecto.documentacion.DocumentacionUsuario
 import com.tramitarte.proyecto.documentacion.Documento
-import com.tramitarte.proyecto.dominio.Documentacion
-import com.tramitarte.proyecto.dominio.Etapa
-import com.tramitarte.proyecto.dominio.Etapa1
-import com.tramitarte.proyecto.dominio.Tramite
+import com.tramitarte.proyecto.dominio.*
 import com.tramitarte.proyecto.repository.DocumentoRepository
 import com.tramitarte.proyecto.repository.EtapaRepository
 import com.tramitarte.proyecto.repository.TramiteRepository
@@ -18,6 +15,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.RequestPart
 import java.util.UUID.randomUUID
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class TramiteService {
@@ -94,5 +92,9 @@ class TramiteService {
 
     fun eliminar(id: Long) {
         tramiteRepository.deleteById(id)
+    }
+
+    fun buscarPorUsuario(usuario: Usuario?): Tramite? {
+        return tramiteRepository.findByUsuario(usuario)
     }
 }
