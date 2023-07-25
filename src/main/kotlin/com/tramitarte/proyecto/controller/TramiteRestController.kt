@@ -48,11 +48,11 @@ class TramiteRestController {
         }
     }
 
-    @PostMapping("/tramite")
-    fun iniciarTramite(): ResponseEntity<Tramite> {
+    @PostMapping("/tramite/{idUsuario}")
+    fun iniciarTramite(@PathVariable idUsuario: Long): ResponseEntity<Tramite> {
         //buscar usuario a partir del logueado y sumarlo a su lista de trámites
         try {
-            var tramiteIniciado = tramiteService.iniciarTramite()
+            var tramiteIniciado = tramiteService.iniciarTramite(idUsuario)
             return ResponseEntity(tramiteIniciado, HttpStatus.OK)
         } catch (exception: IllegalArgumentException) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, exception.message)

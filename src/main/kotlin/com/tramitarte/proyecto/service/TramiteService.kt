@@ -26,10 +26,14 @@ class TramiteService {
     lateinit var documentoRepository: DocumentoRepository
     @Autowired
     lateinit var etapaRepository: EtapaRepository
+    @Autowired
+    lateinit var usuarioService: UsuarioService
 
     @Transactional
-    fun iniciarTramite(): Tramite {
+    fun iniciarTramite(idUsuario: Long): Tramite {
+        val usuario: Usuario? = usuarioService.buscarPorId(idUsuario)
         val tramite = Tramite(codigo = randomUUID().toString(), tipo = "CIUDADANÍA", etapa = Etapa1("Cargar AVO"))
+        tramite.usuario = usuario
         documentoRepository.save(tramite.documentacionAVO)
         documentoRepository.save(tramite.documentacionDescendientes)
         documentoRepository.save(tramite.documentacionUsuario)

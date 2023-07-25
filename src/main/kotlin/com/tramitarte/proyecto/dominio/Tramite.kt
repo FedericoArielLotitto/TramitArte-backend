@@ -16,7 +16,7 @@ class Tramite(codigo: String, tipo: String, etapa: Etapa) {
     @OneToOne
     var etapa = etapa
     @OneToOne
-    @JoinColumn(name = "usuario_id")
+//    @JoinColumn(name = "usuario_id")
     var usuario: Usuario? = null
     @OneToMany
     var adjuntosATraducir = mutableListOf<Documentacion>()
