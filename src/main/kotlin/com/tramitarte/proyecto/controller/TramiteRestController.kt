@@ -114,7 +114,7 @@ class TramiteRestController {
         }
     }
 
-    @DeleteMapping("/tramite")
+    @DeleteMapping("/tramite/{id}")
     fun eliminar(@PathVariable id: Long): ResponseEntity<String> {
         try {
             tramiteService.eliminar(id)
