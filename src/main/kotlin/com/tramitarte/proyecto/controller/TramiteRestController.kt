@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -113,4 +114,15 @@ class TramiteRestController {
         }
     }
 
+    @DeleteMapping("/tramite")
+    fun eliminar(@PathVariable id: Long): ResponseEntity<String> {
+        try {
+            tramiteService.eliminar(id)
+            return ResponseEntity("Trámite eliminado exitosamente", HttpStatus.OK);
+        } catch (exception: IllegalArgumentException) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, exception.message)
+        } catch (exception: Exception) {
+            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, exception.message)
+        }
+    }
 }

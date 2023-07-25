@@ -91,10 +91,18 @@ class TramiteService {
     }
 
     fun eliminar(id: Long) {
+        validarTramiteExistente(id)
         tramiteRepository.deleteById(id)
     }
 
     fun buscarPorUsuario(usuario: Usuario?): Tramite? {
         return tramiteRepository.findByUsuario(usuario)
+    }
+
+    private fun validarTramiteExistente(id: Long) {
+        var existeTramite = tramiteRepository.existsById(id)
+        if(!existeTramite) {
+            throw IllegalArgumentException("El trámite a eliminar no existe")
+        }
     }
 }
