@@ -1,8 +1,10 @@
 package com.tramitarte.proyecto.service
 
+import com.tramitarte.proyecto.dominio.Notificacion
 import com.tramitarte.proyecto.dominio.Rol
 import com.tramitarte.proyecto.dominio.UpdateUserDTO
 import com.tramitarte.proyecto.dominio.Usuario
+import com.tramitarte.proyecto.repository.NotificacionRepository
 import com.tramitarte.proyecto.repository.UsuarioRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
@@ -13,6 +15,9 @@ import java.util.*
 class UsuarioService {
     @Autowired
     lateinit var usuarioRepository: UsuarioRepository
+    @Autowired
+    lateinit var notificacionRepository: NotificacionRepository
+
     fun buscarPorRol(rol: Rol): List<Usuario> {
         return usuarioRepository.findAll()
     }
@@ -32,6 +37,10 @@ class UsuarioService {
 
     fun buscarPorNombreYPrecio(nombre: Optional<String>, apellido: Optional<String>, precio: Optional<Float>): Usuario {
         return usuarioRepository.findByNombreAndAndApellidoAndPrecio(nombre, apellido, precio)
+    }
+
+    fun buscarNotificaciones(usuario: Optional<Usuario>): List<Usuario> {
+        return notificacionRepository.findAllByUsuarioDestino(usuario.get())
     }
 
     fun actualizar(id: Long?, update: UpdateUserDTO): Usuario {
