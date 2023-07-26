@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface NotificacionRepository: JpaRepository<Notificacion, Long> {
-    fun findAllByUsuarioDestino(usuario: Usuario): List<Usuario>
+    fun findAllByUsuarioDestino(usuario: Usuario): List<Notificacion>
 }

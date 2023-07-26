@@ -1,5 +1,9 @@
 package com.tramitarte.proyecto.dominio
 
+import jakarta.persistence.*
+
+@Entity
+@Inheritance(strategy= InheritanceType.SINGLE_TABLE)
 abstract class Notificacion() {
     constructor(
         _usuarioOrigen: Usuario,
@@ -9,10 +13,19 @@ abstract class Notificacion() {
         usuarioDestino = _usuarioDestino
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    open var id: Long = 0
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_origen_id")
     lateinit var usuarioOrigen: Usuario
+    @ManyToOne
+    @JoinColumn(name = "usuario_destino_id")
     lateinit var usuarioDestino: Usuario
 }
 
+@Entity
 class Mensaje(): Notificacion() {
     constructor(
         _usuarioOrigen: Usuario,
@@ -27,6 +40,7 @@ class Mensaje(): Notificacion() {
     var mensaje: String = ""
 }
 
+@Entity
 class Alerta(): Notificacion() {
     constructor(
         _usuarioOrigen: Usuario,

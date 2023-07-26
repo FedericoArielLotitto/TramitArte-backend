@@ -44,7 +44,7 @@ class UsuarioService {
         return usuarioRepository.findByNombreAndAndApellidoAndPrecio(nombre, apellido, precio)
     }
 
-    fun buscarNotificaciones(usuario: Optional<Usuario>): List<Usuario> {
+    fun buscarNotificaciones(usuario: Optional<Usuario>): List<Notificacion> {
         return notificacionRepository.findAllByUsuarioDestino(usuario.get())
     }
 
