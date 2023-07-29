@@ -1,8 +1,6 @@
 package com.tramitarte.proyecto.service
 
-import com.tramitarte.proyecto.dominio.Sexo
 import com.tramitarte.proyecto.dominio.SolicitudAVO
-import com.tramitarte.proyecto.repository.EtapaRepository
 import com.tramitarte.proyecto.repository.SolicitudAVORepository
 import com.tramitarte.proyecto.repository.TramiteRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -10,7 +8,6 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.Assert
-import java.time.LocalDate
 
 @Service
 class SolicitudAVOService {
@@ -19,6 +16,8 @@ class SolicitudAVOService {
 
     @Autowired
     lateinit var tramiteRepository: TramiteRepository
+    @Autowired
+    lateinit var tramiteService: TramiteService
 
     @Transactional
     fun guardar(id: Long, solicitudAVO: SolicitudAVO): SolicitudAVO {
@@ -27,6 +26,7 @@ class SolicitudAVOService {
         tramite.cargarAvo(solicitudAVO)
         solicitudAVORepository.save(solicitudAVO)
         tramiteRepository.save(tramite)
+        tramiteService.avanzarEtapa(id)
         return solicitudAVO
     }
 
