@@ -78,12 +78,12 @@ class TramiteService {
     }
 
     @Transactional
-    fun avanzarEtapa(id: Long): ResponseEntity<Etapa>{
+    fun avanzarEtapa(id: Long): Etapa{
         val tramite = tramiteRepository.findById(id).get()
         tramite.avanzarEtapa()
         etapaRepository.save(tramite.etapa)
         tramiteRepository.save(tramite)
-        return ResponseEntity(tramite.etapa, HttpStatus.OK)
+        return tramite.etapa
     }
 
     @Transactional

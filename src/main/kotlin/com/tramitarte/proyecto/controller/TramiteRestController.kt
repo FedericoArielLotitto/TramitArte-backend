@@ -108,7 +108,7 @@ class TramiteRestController {
     @PostMapping("/avanzar-etapa/{id}")
     fun avanzarEtapa(@PathVariable id: Long): ResponseEntity<Etapa> {
         try {
-            return tramiteService.avanzarEtapa(id)
+            return ResponseEntity.ok(tramiteService.avanzarEtapa(id))
         } catch (exception: IllegalArgumentException) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, exception.message)
         }

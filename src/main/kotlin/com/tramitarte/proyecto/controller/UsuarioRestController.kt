@@ -35,9 +35,9 @@ class UsuarioRestController {
         @RequestParam nombre: Optional<String>, @RequestParam apellido: Optional<String>, @RequestParam precio: Optional<Float>): Usuario =
         usuarioService.buscarPorNombreYPrecio(nombre, apellido, precio)
 
-    @GetMapping("/usuario/notificaciones")
-    fun buscarNotificaciones(@RequestParam usuario: Usuario) =
-        usuarioService.buscarNotificaciones(usuario as Optional<Usuario>)
+//    @GetMapping("/usuario/notificaciones")
+//    fun buscarNotificaciones(@RequestParam usuario: Usuario) =
+//        usuarioService.buscarNotificaciones(usuario as Optional<Usuario>)
 
     @PostMapping("/usuario")
     fun crear(@RequestBody usuario: Usuario): ResponseEntity<Usuario> {
@@ -58,7 +58,7 @@ class UsuarioRestController {
     }
 
     @GetMapping("/usuario")
-    fun buscarPorCorreoElectronico(@RequestBody correoElectronico: String): ResponseEntity<Usuario> {
+    fun buscarPorCorreoElectronico(@RequestParam correoElectronico: String): ResponseEntity<Usuario> {
         try {
             return ResponseEntity.ok(usuarioService.buscarPorCorreoElectronico(correoElectronico))
         } catch (exception: IllegalArgumentException) {
