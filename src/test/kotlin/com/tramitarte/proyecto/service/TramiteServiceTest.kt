@@ -156,22 +156,14 @@
 //
 //        //etapa 4
 //        tramite.avanzarEtapa()
-//
-//        assertThat(tramite.etapa.descripcion).isEqualTo("Traducir los documentos necesarios")
-//
-//        assertThrows<ExcepcionDocumentacionInvalida> { tramite.avanzarEtapa() }
-//
-//        assertThat(tramite.adjuntosATraducir.size).isEqualTo(7)
-//
-//        val documentosTraducidos = mutableListOf(documento, documento, documento, documento, documento, documento)
-//
-//        tramiteService.cargarDocumentacionTraducida(tramite.id!!, documentosTraducidos)
-//
-//        assertThrows<ExcepcionDocumentacionInvalida> { tramite.avanzarEtapa() }
-//
-//        documentosTraducidos.add(documento)
-//
-//        tramiteService.cargarDocumentacionTraducida(tramite.id!!, documentosTraducidos)
+
+//       assertThat(tramite.etapa.descripcion).isEqualTo("Traducir los documentos necesarios")
+
+//       assertThrows<ExcepcionDocumentacionInvalida> { tramite.avanzarEtapa() }
+
+//      assertThat(tramite.adjuntosATraducir.size).isEqualTo(7)
+
+//       tramiteService.cargarDocumentacionTraducida(tramite.id!!, tramite.adjuntosATraducir)
 //
 //        //etapa 5
 //        tramite.avanzarEtapa()

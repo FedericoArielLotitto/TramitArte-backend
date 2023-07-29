@@ -19,10 +19,10 @@ abstract class Notificacion() {
 
     @ManyToOne
     @JoinColumn(name = "usuario_origen_id")
-    lateinit var usuarioOrigen: Usuario
+    open lateinit var usuarioOrigen: Usuario
     @ManyToOne
     @JoinColumn(name = "usuario_destino_id")
-    lateinit var usuarioDestino: Usuario
+    open lateinit var usuarioDestino: Usuario
 }
 
 @Entity
