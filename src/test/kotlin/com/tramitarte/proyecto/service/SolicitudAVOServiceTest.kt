@@ -1,9 +1,12 @@
 package com.tramitarte.proyecto.service
 
 import com.tramitarte.proyecto.builder.SolicitudAVOBuilder
+import com.tramitarte.proyecto.builder.UsuarioBuilder
 import com.tramitarte.proyecto.dominio.Sexo
 import com.tramitarte.proyecto.dominio.SolicitudAVO
+import com.tramitarte.proyecto.dominio.Usuario
 import com.tramitarte.proyecto.repository.SolicitudAVORepository
+import com.tramitarte.proyecto.repository.UsuarioRepository
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -16,12 +19,16 @@ class SolicitudAVOServiceTest {
     lateinit var solicitudAVOService: SolicitudAVOService
     @Autowired
     lateinit var tramiteService: TramiteService
+    @Autowired
+    lateinit var usuarioRepository: UsuarioRepository
 
     @Autowired
     lateinit var solicitudAVORepository: SolicitudAVORepository
     @Test
     fun guardar_conAVOaGuardar_retornaAVO() {
-        val tramite = tramiteService.iniciarTramite()
+        val usuario: Usuario = UsuarioBuilder.conUsuarioInicializado().conNombre("usuario").conApellido("apellido").build()
+        val usuarioPersistido: Usuario = usuarioRepository.save(usuario)
+        val tramite = tramiteService.iniciarTramite(usuarioPersistido.id!!)
         assertThat(tramite).isNotNull()
         assertThat(tramite.id).isNotNull()
         val solicitudRecibida = SolicitudAVOBuilder
@@ -36,7 +43,9 @@ class SolicitudAVOServiceTest {
 
     @Test
     fun guardar_conAVOAGuardarConNombre_retornaSolicitudAVOConNombre() {
-        val tramite = tramiteService.iniciarTramite()
+        val usuario: Usuario = UsuarioBuilder.conUsuarioInicializado().conNombre("usuario").conApellido("apellido").build()
+        val usuarioPersistido: Usuario = usuarioRepository.save(usuario)
+        val tramite = tramiteService.iniciarTramite(usuarioPersistido.id!!)
         assertThat(tramite).isNotNull()
         assertThat(tramite.id).isNotNull()
         val solicitudRecibida = SolicitudAVOBuilder.conSolicitudInicializada()
@@ -50,7 +59,9 @@ class SolicitudAVOServiceTest {
 
     @Test
     fun guardar_conAVOAGuardarConApellido_retornaSolicitudAVOConApellido() {
-        val tramite = tramiteService.iniciarTramite()
+        val usuario: Usuario = UsuarioBuilder.conUsuarioInicializado().conNombre("usuario").conApellido("apellido").build()
+        val usuarioPersistido: Usuario = usuarioRepository.save(usuario)
+        val tramite = tramiteService.iniciarTramite(usuarioPersistido.id!!)
         assertThat(tramite).isNotNull()
         assertThat(tramite.id).isNotNull()
         val solicitudRecibida = SolicitudAVOBuilder.conSolicitudInicializada()
@@ -65,7 +76,9 @@ class SolicitudAVOServiceTest {
 
     @Test
     fun guardar_conAVOAGuardarConFechaNacimiento_retornaSolicitudAVOConFechaNacimiento() {
-        val tramite = tramiteService.iniciarTramite()
+        val usuario: Usuario = UsuarioBuilder.conUsuarioInicializado().conNombre("usuario").conApellido("apellido").build()
+        val usuarioPersistido: Usuario = usuarioRepository.save(usuario)
+        val tramite = tramiteService.iniciarTramite(usuarioPersistido.id!!)
         assertThat(tramite).isNotNull()
         assertThat(tramite.id).isNotNull()
         val solicitudRecibida = SolicitudAVOBuilder.conSolicitudInicializada()
@@ -81,7 +94,9 @@ class SolicitudAVOServiceTest {
 
     @Test
     fun guardar_conAVOAGuardarConSexo_retornaSolicitudAVOConSexo() {
-        val tramite = tramiteService.iniciarTramite()
+        val usuario: Usuario = UsuarioBuilder.conUsuarioInicializado().conNombre("usuario").conApellido("apellido").build()
+        val usuarioPersistido: Usuario = usuarioRepository.save(usuario)
+        val tramite = tramiteService.iniciarTramite(usuarioPersistido.id!!)
         assertThat(tramite).isNotNull()
         assertThat(tramite.id).isNotNull()
         val solicitudRecibida = SolicitudAVOBuilder.conSolicitudInicializada()
@@ -97,7 +112,9 @@ class SolicitudAVOServiceTest {
 
     @Test
     fun guardar_conNombreVacio_lanzaExcepcion() {
-        val tramite = tramiteService.iniciarTramite()
+        val usuario: Usuario = UsuarioBuilder.conUsuarioInicializado().conNombre("usuario").conApellido("apellido").build()
+        val usuarioPersistido: Usuario = usuarioRepository.save(usuario)
+        val tramite = tramiteService.iniciarTramite(usuarioPersistido.id!!)
         assertThat(tramite).isNotNull()
         assertThat(tramite.id).isNotNull()
         val solicitudRecibida = SolicitudAVOBuilder.conSolicitudInicializada()
@@ -113,7 +130,9 @@ class SolicitudAVOServiceTest {
 
     @Test
     fun guardar_conApellidoVacio_lanzaExcepcion() {
-        val tramite = tramiteService.iniciarTramite()
+        val usuario: Usuario = UsuarioBuilder.conUsuarioInicializado().conNombre("usuario").conApellido("apellido").build()
+        val usuarioPersistido: Usuario = usuarioRepository.save(usuario)
+        val tramite = tramiteService.iniciarTramite(usuarioPersistido.id!!)
         assertThat(tramite).isNotNull()
         assertThat(tramite.id).isNotNull()
         val solicitudRecibida = SolicitudAVOBuilder.conSolicitudInicializada()

@@ -20,11 +20,13 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven(url = "https://jitpack.io")
 }
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	//implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("com.github.therealbush:translator:1.0.2")
 	implementation("net.sourceforge.tess4j:tess4j:5.7.0")
 	implementation("org.apache.pdfbox:pdfbox:2.0.29")
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")

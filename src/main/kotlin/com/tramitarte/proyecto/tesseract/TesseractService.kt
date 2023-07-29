@@ -26,9 +26,12 @@ class TesseractService {
 
     fun recognizedPDF(file: InputStream): String{
         try {
-            val pdDocument: PDDocument = PDDocument.load(file)
-            val pdfStripper = PDFTextStripper()
-            return pdfStripper.getText(pdDocument)
+            var text = ""
+            PDDocument.load(file).use { pdDocument ->
+                val pdfStripper = PDFTextStripper()
+                text = pdfStripper.getText(pdDocument)
+            }
+            return text
         }catch (exception: Exception){
             throw exception
         }
