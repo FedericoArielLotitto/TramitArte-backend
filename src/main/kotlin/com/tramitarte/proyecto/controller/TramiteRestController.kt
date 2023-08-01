@@ -87,9 +87,10 @@ class TramiteRestController {
     fun cargaDocumentacionAVO(
         @PathVariable id: Long,
         @RequestBody documentacionAVO: DocumentacionAVO
-    ): ResponseEntity<DocumentacionAVO> {
+    ): ResponseEntity<String> {
         try {
-            return tramiteService.cargaDocumentacionAVO(id, documentacionAVO)
+            tramiteService.cargaDocumentacionAVO(id, documentacionAVO)
+            return ResponseEntity("Documentación guardada con éxito", HttpStatus.OK)
         } catch (exception: IllegalArgumentException) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, exception.message)
         }

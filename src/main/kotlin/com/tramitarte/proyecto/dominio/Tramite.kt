@@ -4,6 +4,7 @@ import com.tramitarte.proyecto.documentacion.DocumentacionAVO
 import com.tramitarte.proyecto.documentacion.DocumentacionDescendientes
 import com.tramitarte.proyecto.documentacion.DocumentacionUsuario
 import jakarta.persistence.*
+import javax.print.Doc
 
 @Entity
 class Tramite(codigo: String, tipo: String, etapa: Etapa) {
@@ -19,7 +20,7 @@ class Tramite(codigo: String, tipo: String, etapa: Etapa) {
     var usuario: Usuario? = null
     @OneToMany
     var adjuntosATraducir = mutableListOf<Documentacion>()
-    @OneToOne
+    @Embedded
     var documentacionUsuario: DocumentacionUsuario? = null
     @OneToOne
     var documentacionAVO: DocumentacionAVO? = null
@@ -39,5 +40,9 @@ class Tramite(codigo: String, tipo: String, etapa: Etapa) {
 
     fun avanzarEtapa(): Unit {
         etapa.verificarEtapa(this)
+    }
+
+    fun agregarAdjuntoATraducir(adjunto: Documentacion) {
+        this.adjuntosATraducir.add(adjunto)
     }
 }

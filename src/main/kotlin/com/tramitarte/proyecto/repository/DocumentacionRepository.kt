@@ -5,4 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface DocumentoRepository: JpaRepository<Documentacion, Long> {}
+interface DocumentacionRepository: JpaRepository<Documentacion, Long> {}

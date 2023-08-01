@@ -1,5 +1,6 @@
 package com.tramitarte.proyecto.dominio
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -12,6 +13,4 @@ class Documentacion(nombre: String, archivoBase64: String) {
     var id: Long? = null
     var nombre: String = nombre
     var archivoBase64: String = archivoBase64
-
-    fun validarDocumentacion(): Boolean = true
 }

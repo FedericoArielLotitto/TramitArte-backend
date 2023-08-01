@@ -4,7 +4,7 @@ import com.tramitarte.proyecto.documentacion.DocumentacionAVO
 import com.tramitarte.proyecto.documentacion.DocumentacionDescendientes
 import com.tramitarte.proyecto.documentacion.DocumentacionUsuario
 import com.tramitarte.proyecto.dominio.*
-import com.tramitarte.proyecto.repository.DocumentoRepository
+import com.tramitarte.proyecto.repository.DocumentacionRepository
 import com.tramitarte.proyecto.repository.EtapaRepository
 import com.tramitarte.proyecto.repository.TramiteRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,7 +21,7 @@ class TramiteService {
     lateinit var tramiteRepository: TramiteRepository
 
     @Autowired
-    lateinit var documentoRepository: DocumentoRepository
+    lateinit var documentoRepository: DocumentacionRepository
 
     @Autowired
     lateinit var etapaRepository: EtapaRepository
@@ -46,26 +46,37 @@ class TramiteService {
         documentoRepository.save(documentacionUsuario.dniDorso)
         documentoRepository.save(documentacionUsuario.dniFrente)
         documentoRepository.save(documentacionUsuario.certificadoNacimiento)
+        tramite.avanzarEtapa()
         tramiteRepository.save(tramite)
         return documentacionUsuario
     }
 
     @Transactional
-    fun cargaDocumentacionAVO(id: Long, documentacionAVO: DocumentacionAVO): ResponseEntity<DocumentacionAVO> {
+    fun cargaDocumentacionAVO(id: Long, documentacionAVO: DocumentacionAVO) {
         val tramite = tramiteRepository.findById(id).get()
         tramite.documentacionAVO = documentacionAVO
-        documentacionAVO.certificadoNacimiento.let { tramite.adjuntosATraducir.add(it) }
-        documentacionAVO.certificadoDefuncion.let { tramite.adjuntosATraducir.add(it) }
-        documentacionAVO.certificadoMatrimonio.let { tramite.adjuntosATraducir.add(it) }
-        documentoRepository.save(documentacionAVO.certificadoNacimiento)
-        if (documentacionAVO.certificadoMatrimonio != null) {
-            documentoRepository.save(documentacionAVO.certificadoNacimiento)
-        }
-        if (documentacionAVO.certificadoDefuncion != null) {
-            documentoRepository.save(documentacionAVO.certificadoDefuncion)
-        }
+        var certificadoNacimiento = documentoRepository.save(documentacionAVO.certificadoNacimiento)
+        tramite.agregarAdjuntoATraducir(certificadoNacimiento)
+//        if (documentacionAVO.certificadoMatrimonio != null) {
+//            var certificadoMatrimonio = documentoRepository.save(documentacionAVO.certificadoMatrimonio!!)
+//            tramite.agregarAdjuntoATraducir(
+//                Documentacion(
+//                    nombre = certificadoMatrimonio.nombre,
+//                    archivoBase64 = certificadoMatrimonio.archivoBase64
+//                )
+//            )
+//        }
+
+//        if (documentacionAVO.certificadoDefuncion != null) {
+//            documentoRepository.save(documentacionAVO.certificadoDefuncion!!)
+//        }
+//        if (documentacionAVO.certificadoMatrimonio != null) {
+//            tramite.agregarAdjuntoATraducir(documentacionAVO.certificadoMatrimonio!!)
+//        }
+//        if (documentacionAVO.certificadoMatrimonio != null) {
+//            tramite.agregarAdjuntoATraducir(documentacionAVO.certificadoMatrimonio!!)
+//        }
         tramiteRepository.save(tramite)
-        return ResponseEntity(documentacionAVO, HttpStatus.OK)
     }
 
     @Transactional
@@ -77,14 +88,14 @@ class TramiteService {
         tramite.documentacionDescendientes = documentacionDescendientes
         documentacionDescendientes.descendientes.forEach {
             it.certificadoNacimiento.let { certificado -> tramite.adjuntosATraducir.add(certificado) }
-            it.certificadoMatrimonio.let { certificado -> tramite.adjuntosATraducir.add(certificado) }
-            it.certificadoDefuncion.let { certificado -> tramite.adjuntosATraducir.add(certificado) }
+//            it.certificadoMatrimonio.let { certificado -> tramite.adjuntosATraducir.add(certificado) }
+//            it.certificadoDefuncion.let { certificado -> tramite.adjuntosATraducir.add(certificado) }
         }
         documentacionDescendientes.descendientes.forEach {
             run {
                 documentoRepository.save(it.certificadoNacimiento)
-                documentoRepository.save(it.certificadoDefuncion)
-                documentoRepository.save(it.certificadoMatrimonio)
+//                documentoRepository.save(it.certificadoDefuncion)
+//                documentoRepository.save(it.certificadoMatrimonio)
             }
 
         }

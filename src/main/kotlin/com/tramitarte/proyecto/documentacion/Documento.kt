@@ -23,8 +23,10 @@ class DocumentacionAVO(certificadoNacimiento: Documentacion, certificadoMatrimon
     var id: Long = 0
     @OneToOne
     var certificadoNacimiento = certificadoNacimiento
+
     @OneToOne
     var certificadoMatrimonio = certificadoMatrimonio
+
     @OneToOne
     var certificadoDefuncion = certificadoDefuncion
 
@@ -40,20 +42,19 @@ class DocumentacionDescendientes {
     var descendientes: MutableList<DocumentacionAVO> = mutableListOf()
     fun validar(): Boolean = descendientes.all { it.validar() }
 
-    fun agregarDescendiente(descendiente: DocumentacionAVO){
+    fun agregarDescendiente(descendiente: DocumentacionAVO) {
         descendientes.add(descendiente)
     }
 }
 
-@Entity
+@Embeddable
 class DocumentacionUsuario(dniFrente: Documentacion, dniDorso: Documentacion, certificadoNacimiento: Documentacion) {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0
     @OneToOne
     var certificadoNacimiento = certificadoNacimiento
+
     @OneToOne
     var dniFrente = dniFrente
+
     @OneToOne
     var dniDorso = dniDorso
     fun validar(): Boolean = dniFrente != null && dniDorso != null && certificadoNacimiento != null
