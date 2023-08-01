@@ -48,7 +48,7 @@ class Etapa2(): Etapa() {
     }
 
     override fun verificarEtapa(tramite: Tramite) {
-        if(!tramite.documentacionUsuario.validar()) {
+        if(tramite.documentacionUsuario!!.validar()) {
             throw ExcepcionDocumentacionInvalida("La documentación presentada no es valida")
         }
         tramite.etapa = Etapa3("Cargar documentación de los descendientes entre AVO y solicitante")
@@ -64,7 +64,7 @@ class Etapa3(): Etapa() {
     }
 
     override fun verificarEtapa(tramite: Tramite) {
-        if(!tramite.documentacionAVO.validar() || !tramite.documentacionDescendientes.validar()) {
+        if(!tramite.documentacionAVO!!.validar() || !tramite.documentacionDescendientes!!.validar()) {
             throw ExcepcionDocumentacionInvalida("La documentación presentada no es valida")
         }
         tramite.etapa = Etapa4("Traducir los documentos necesarios")

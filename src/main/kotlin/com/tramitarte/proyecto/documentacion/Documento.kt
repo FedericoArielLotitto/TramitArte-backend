@@ -2,42 +2,43 @@ package com.tramitarte.proyecto.documentacion
 
 import com.tramitarte.proyecto.dominio.Documentacion
 import jakarta.persistence.*
+import javax.print.Doc
+
+//@Entity
+//abstract class Documento{
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    var id: Long = 0
+//    @OneToOne
+//    open var certificadoNacimiento: Documentacion? = null
+//
+//
+//    abstract fun validar(): Boolean
+//}
 
 @Entity
-abstract class Documento{
+class DocumentacionAVO(certificadoNacimiento: Documentacion, certificadoMatrimonio : Documentacion, certificadoDefuncion: Documentacion) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    open var id: Long = 0
-
+    var id: Long = 0
     @OneToOne
-    open var dniFrente: Documentacion? = null
+    var certificadoNacimiento = certificadoNacimiento
     @OneToOne
-    open var dniDorso: Documentacion? = null
+    var certificadoMatrimonio = certificadoMatrimonio
     @OneToOne
-    open var certificadoNacimiento: Documentacion? = null
+    var certificadoDefuncion = certificadoDefuncion
 
-
-    abstract fun validar(): Boolean
+    fun validar(): Boolean = certificadoNacimiento != null
 }
 
 @Entity
-class DocumentacionAVO: Documento() {
-
-    @OneToOne
-    var certificadoMatrimonio: Documentacion? = null
-    @OneToOne
-    var certificadoDefunsion: Documentacion? = null
-
-    override fun validar(): Boolean = dniFrente != null && dniDorso != null && certificadoNacimiento != null
-}
-
-@Entity
-class DocumentacionDescendientes: Documento() {
-
+class DocumentacionDescendientes {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long = 0
     @OneToMany
     var descendientes: MutableList<DocumentacionAVO> = mutableListOf()
-
-    override fun validar(): Boolean = descendientes.all { it.validar() }
+    fun validar(): Boolean = descendientes.all { it.validar() }
 
     fun agregarDescendiente(descendiente: DocumentacionAVO){
         descendientes.add(descendiente)
@@ -45,7 +46,15 @@ class DocumentacionDescendientes: Documento() {
 }
 
 @Entity
-class DocumentacionUsuario: Documento() {
-
-    override fun validar(): Boolean = dniFrente != null && dniDorso != null && certificadoNacimiento != null
+class DocumentacionUsuario(dniFrente: Documentacion, dniDorso: Documentacion, certificadoNacimiento: Documentacion) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long = 0
+    @OneToOne
+    var certificadoNacimiento = certificadoNacimiento
+    @OneToOne
+    var dniFrente = dniFrente
+    @OneToOne
+    var dniDorso = dniDorso
+    fun validar(): Boolean = dniFrente != null && dniDorso != null && certificadoNacimiento != null
 }

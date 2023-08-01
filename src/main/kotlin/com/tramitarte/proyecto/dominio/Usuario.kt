@@ -4,7 +4,7 @@ import jakarta.persistence.*
 import java.time.LocalDate
 
 @Entity
-class Usuario(username: String, nombre: String, apellido: String, rol: Rol, precio: Float, correoElectronico: String, fechaDeNacimiento: LocalDate) {
+class Usuario(username: String, nombre: String, apellido: String, rol: Rol, precio: Float, correoElectronico: String, fechaDeNacimiento: LocalDate, fotoPerfil: String) {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +17,7 @@ class Usuario(username: String, nombre: String, apellido: String, rol: Rol, prec
     var correoElectronico: String = correoElectronico
     var fechaDeNacimiento: LocalDate = fechaDeNacimiento
     var nesecitaTraduccion: Boolean = false
+    var fotoPerfil: String = fotoPerfil
 
     fun updateUser(update: UpdateUserDTO){
         nombre = update.name

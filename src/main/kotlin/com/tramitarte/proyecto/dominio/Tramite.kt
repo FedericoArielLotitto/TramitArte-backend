@@ -16,16 +16,15 @@ class Tramite(codigo: String, tipo: String, etapa: Etapa) {
     @OneToOne
     var etapa = etapa
     @OneToOne
-//    @JoinColumn(name = "usuario_id")
     var usuario: Usuario? = null
     @OneToMany
     var adjuntosATraducir = mutableListOf<Documentacion>()
     @OneToOne
-    var documentacionUsuario: DocumentacionUsuario = DocumentacionUsuario()
+    var documentacionUsuario: DocumentacionUsuario? = null
     @OneToOne
-    var documentacionAVO: DocumentacionAVO = DocumentacionAVO()
+    var documentacionAVO: DocumentacionAVO? = null
     @OneToOne
-    var documentacionDescendientes: DocumentacionDescendientes = DocumentacionDescendientes()
+    var documentacionDescendientes: DocumentacionDescendientes? = null
     @OneToMany
     var documentacionTraducida: MutableList<Documentacion> = mutableListOf()
     @ManyToOne

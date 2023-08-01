@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 import java.lang.Exception
+import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 @RestController
 @CrossOrigin("*")
@@ -73,9 +74,10 @@ class TramiteRestController {
     fun cargaDocumentacionUsuario(
         @PathVariable id: Long,
         @RequestBody documentacionUsuario: DocumentacionUsuario
-    ): ResponseEntity<DocumentacionUsuario> {
+    ): ResponseEntity<String> {
         try {
-            return tramiteService.cargaDocumentacionUsuario(id, documentacionUsuario)
+            tramiteService.cargaDocumentacionUsuario(id, documentacionUsuario)
+            return ResponseEntity("Documentación guardada con éxito", HttpStatus.OK)
         } catch (exception: IllegalArgumentException) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, exception.message)
         }
@@ -118,7 +120,7 @@ class TramiteRestController {
     fun eliminar(@PathVariable id: Long): ResponseEntity<String> {
         try {
             tramiteService.eliminar(id)
-            return ResponseEntity("Trámite eliminado exitosamente", HttpStatus.OK);
+            return ResponseEntity("Trámite eliminado exitosamente", HttpStatus.OK)
         } catch (exception: IllegalArgumentException) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, exception.message)
         } catch (exception: Exception) {
