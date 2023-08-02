@@ -5,6 +5,7 @@ import jakarta.persistence.*
 
 @Entity
 @Inheritance(strategy= InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "tipo_etapa")
 abstract class Etapa() {
     constructor(
         _descripcion: String
@@ -48,10 +49,10 @@ class Etapa2(): Etapa() {
     }
 
     override fun verificarEtapa(tramite: Tramite) {
-        if(tramite.documentacionUsuario!!.validar()) {
+        if(tramite.documentacionUsuario!!.size < 3) {
             throw ExcepcionDocumentacionInvalida("La documentación presentada no es valida")
         }
-        tramite.etapa = Etapa3("Cargar documentación de los descendientes entre AVO y solicitante")
+        tramite.etapa = Etapa3("Cargar documentación de AVO")
     }
 }
 
@@ -64,10 +65,10 @@ class Etapa3(): Etapa() {
     }
 
     override fun verificarEtapa(tramite: Tramite) {
-        if(!tramite.documentacionAVO!!.validar() || !tramite.documentacionDescendientes!!.validar()) {
+        if(tramite.documentacionAVO!!.size < 3) {
             throw ExcepcionDocumentacionInvalida("La documentación presentada no es valida")
         }
-        tramite.etapa = Etapa4("Traducir los documentos necesarios")
+        tramite.etapa = Etapa4("Cargar documentación de descendientes")
     }
 }
 
@@ -80,11 +81,10 @@ class Etapa4(): Etapa() {
     }
 
     override fun verificarEtapa(tramite: Tramite) {
-        if(!tramite.tieneDocumentacionTraducirda()) {
+        if(tramite.documentacionDescendientes!!.size !in tramite.cantidadDescendientes..tramite.cantidadDescendientes * 3) {
             throw ExcepcionDocumentacionInvalida("El tramite no tiene documentos traducidos")
         }
-        tramite.etapa = Etapa5("Felicidades, ya tiene todo lo necesario para presentarse al " +
-                "consuldado y pedir su ciudadania")
+        tramite.etapa = Etapa4("Traducir toda la documentación")
     }
 }
 
@@ -96,5 +96,11 @@ class Etapa5(): Etapa() {
         descripcion = _descripcion
     }
 
-    override fun verificarEtapa(tramite: Tramite) {}
+    override fun verificarEtapa(tramite: Tramite) {
+        if(!tramite.tieneDocumentacionTraducirda()) {
+            throw ExcepcionDocumentacionInvalida("El trámite no tiene documentos traducidos")
+        }
+//        tramite.etapa = Etapa5("Felicidades, ya tiene todo lo necesario para presentarse al " +
+//                "consuldado y pedir su ciudadania")
+    }
 }

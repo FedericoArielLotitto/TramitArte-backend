@@ -1,13 +1,11 @@
 package com.tramitarte.proyecto.builder
 
 import com.tramitarte.proyecto.dominio.Rol
-import com.tramitarte.proyecto.dominio.Sexo
-import com.tramitarte.proyecto.dominio.SolicitudAVO
 import com.tramitarte.proyecto.dominio.Usuario
 import java.time.LocalDate
 
 class UsuarioBuilder {
-    private val usuarioBase = Usuario(username = "usernameUsuario", nombre = "nombreUsuario", apellido = "apellidoUsuario", rol = Rol.SOLICITANTE, precio = 200f, correoElectronico = "correo@electronico.com", fechaDeNacimiento = LocalDate.now())
+    private val usuarioBase = Usuario(username = "usernameUsuario", nombre = "nombreUsuario", apellido = "apellidoUsuario", rol = Rol.SOLICITANTE, precio = 200f, correoElectronico = "correo@electronico.com", fotoPerfil = "", fechaDeNacimiento = LocalDate.now())
     companion object {
         fun conUsuarioInicializado(): UsuarioBuilder = UsuarioBuilder()
     }

@@ -1,10 +1,6 @@
 package com.tramitarte.proyecto.dominio
 
-import com.tramitarte.proyecto.documentacion.DocumentacionAVO
-import com.tramitarte.proyecto.documentacion.DocumentacionDescendientes
-import com.tramitarte.proyecto.documentacion.DocumentacionUsuario
 import jakarta.persistence.*
-import javax.print.Doc
 
 @Entity
 class Tramite(codigo: String, tipo: String, etapa: Etapa) {
@@ -20,29 +16,28 @@ class Tramite(codigo: String, tipo: String, etapa: Etapa) {
     var usuario: Usuario? = null
     @OneToMany
     var adjuntosATraducir = mutableListOf<Documentacion>()
-    @Embedded
-    var documentacionUsuario: DocumentacionUsuario? = null
-    @OneToOne
-    var documentacionAVO: DocumentacionAVO? = null
-    @OneToOne
-    var documentacionDescendientes: DocumentacionDescendientes? = null
+    @OneToMany(cascade = [CascadeType.ALL])
+    var documentacionUsuario: List<Documentacion>? = null
+    @OneToMany(cascade = [CascadeType.ALL])
+    var documentacionAVO: List<Documentacion>? = null
+    @OneToMany(cascade = [CascadeType.ALL])
+    var documentacionDescendientes: List<Documentacion>? = null
     @OneToMany
     var documentacionTraducida: MutableList<Documentacion> = mutableListOf()
     @ManyToOne
-    @JoinColumn(name = "avo_cargado")
     var solicitudAvo: SolicitudAVO? = null
-
+    var cantidadDescendientes: Long = 0
     fun cargarAvo(avo: SolicitudAVO) {
         solicitudAvo = avo
     }
 
     fun tieneDocumentacionTraducirda(): Boolean = documentacionTraducida.size == adjuntosATraducir.size
 
-    fun avanzarEtapa(): Unit {
+    fun avanzarEtapa() {
         etapa.verificarEtapa(this)
     }
 
-    fun agregarAdjuntoATraducir(adjunto: Documentacion) {
-        this.adjuntosATraducir.add(adjunto)
+    fun agregarAdjuntosATraducir(adjuntos: List<Documentacion>) {
+        this.adjuntosATraducir.addAll(adjuntos)
     }
 }

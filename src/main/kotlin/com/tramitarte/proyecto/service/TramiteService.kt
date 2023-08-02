@@ -1,10 +1,6 @@
 package com.tramitarte.proyecto.service
 
-import com.tramitarte.proyecto.documentacion.DocumentacionAVO
-import com.tramitarte.proyecto.documentacion.DocumentacionDescendientes
-import com.tramitarte.proyecto.documentacion.DocumentacionUsuario
 import com.tramitarte.proyecto.dominio.*
-import com.tramitarte.proyecto.repository.DocumentacionRepository
 import com.tramitarte.proyecto.repository.EtapaRepository
 import com.tramitarte.proyecto.repository.TramiteRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,9 +15,6 @@ class TramiteService {
 
     @Autowired
     lateinit var tramiteRepository: TramiteRepository
-
-    @Autowired
-    lateinit var documentoRepository: DocumentacionRepository
 
     @Autowired
     lateinit var etapaRepository: EtapaRepository
@@ -39,68 +32,36 @@ class TramiteService {
     }
 
     @Transactional
-    fun cargaDocumentacionUsuario(id: Long, documentacionUsuario: DocumentacionUsuario): DocumentacionUsuario {
+    fun cargaDocumentacionUsuario(id: Long, documentacionUsuario: List<Documentacion>): Tramite {
         val tramite = tramiteRepository.findById(id).get()
         tramite.documentacionUsuario = documentacionUsuario
-        documentacionUsuario.certificadoNacimiento.let { tramite.adjuntosATraducir.add(it) }
-        documentoRepository.save(documentacionUsuario.dniDorso)
-        documentoRepository.save(documentacionUsuario.dniFrente)
-        documentoRepository.save(documentacionUsuario.certificadoNacimiento)
+        tramite.agregarAdjuntosATraducir(documentacionUsuario)
         tramite.avanzarEtapa()
-        tramiteRepository.save(tramite)
-        return documentacionUsuario
+        etapaRepository.save(tramite.etapa)
+        val tramitePersistido = tramiteRepository.save(tramite)
+        return tramitePersistido
     }
 
     @Transactional
-    fun cargaDocumentacionAVO(id: Long, documentacionAVO: DocumentacionAVO) {
+    fun cargaDocumentacionAVO(id: Long, documentacionAVO: MutableList<Documentacion>): Tramite {
         val tramite = tramiteRepository.findById(id).get()
         tramite.documentacionAVO = documentacionAVO
-        var certificadoNacimiento = documentoRepository.save(documentacionAVO.certificadoNacimiento)
-        tramite.agregarAdjuntoATraducir(certificadoNacimiento)
-//        if (documentacionAVO.certificadoMatrimonio != null) {
-//            var certificadoMatrimonio = documentoRepository.save(documentacionAVO.certificadoMatrimonio!!)
-//            tramite.agregarAdjuntoATraducir(
-//                Documentacion(
-//                    nombre = certificadoMatrimonio.nombre,
-//                    archivoBase64 = certificadoMatrimonio.archivoBase64
-//                )
-//            )
-//        }
-
-//        if (documentacionAVO.certificadoDefuncion != null) {
-//            documentoRepository.save(documentacionAVO.certificadoDefuncion!!)
-//        }
-//        if (documentacionAVO.certificadoMatrimonio != null) {
-//            tramite.agregarAdjuntoATraducir(documentacionAVO.certificadoMatrimonio!!)
-//        }
-//        if (documentacionAVO.certificadoMatrimonio != null) {
-//            tramite.agregarAdjuntoATraducir(documentacionAVO.certificadoMatrimonio!!)
-//        }
-        tramiteRepository.save(tramite)
+        tramite.agregarAdjuntosATraducir(documentacionAVO)
+        tramite.avanzarEtapa()
+        etapaRepository.save(tramite.etapa)
+        val tramitePersistido = tramiteRepository.save(tramite)
+        return tramitePersistido
     }
 
     @Transactional
     fun cargaDocumentacionDescendientes(
         id: Long,
-        documentacionDescendientes: DocumentacionDescendientes
-    ): ResponseEntity<DocumentacionDescendientes> {
+        documentacionDescendientes: MutableList<Documentacion>
+    ): Tramite {
         val tramite = tramiteRepository.findById(id).get()
         tramite.documentacionDescendientes = documentacionDescendientes
-        documentacionDescendientes.descendientes.forEach {
-            it.certificadoNacimiento.let { certificado -> tramite.adjuntosATraducir.add(certificado) }
-//            it.certificadoMatrimonio.let { certificado -> tramite.adjuntosATraducir.add(certificado) }
-//            it.certificadoDefuncion.let { certificado -> tramite.adjuntosATraducir.add(certificado) }
-        }
-        documentacionDescendientes.descendientes.forEach {
-            run {
-                documentoRepository.save(it.certificadoNacimiento)
-//                documentoRepository.save(it.certificadoDefuncion)
-//                documentoRepository.save(it.certificadoMatrimonio)
-            }
-
-        }
-        tramiteRepository.save(tramite)
-        return ResponseEntity(documentacionDescendientes, HttpStatus.OK)
+        val tramitePersistido = tramiteRepository.save(tramite)
+        return tramitePersistido
     }
 
     @Transactional
@@ -133,7 +94,7 @@ class TramiteService {
     }
 
     private fun validarTramiteExistente(id: Long) {
-        var existeTramite = tramiteRepository.existsById(id)
+        val existeTramite = tramiteRepository.existsById(id)
         if (!existeTramite) {
             throw IllegalArgumentException("El trámite a eliminar no existe")
         }

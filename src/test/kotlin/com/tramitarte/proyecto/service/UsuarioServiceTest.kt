@@ -26,13 +26,13 @@ class UsuarioServiceTest {
             .conNombre("nombreUsuario")
             .conApellido("apellidoUsuario")
             .conRol(Rol.TRADUCTOR)
-            .build();
+            .build()
 
         val usuarioAPersistirDos = UsuarioBuilder.conUsuarioInicializado()
             .conNombre("nombreUsuario")
             .conApellido("apellidoUsuario")
             .conRol(Rol.TRADUCTOR)
-            .build();
+            .build()
         usuarioRepository.save(usuarioAPersistirUno)
         usuarioRepository.save(usuarioAPersistirDos)
 
@@ -46,7 +46,7 @@ class UsuarioServiceTest {
 
         val usuarioPersistido = usuarioService.crear(usuario)
 
-        assertThat(usuarioPersistido.id).isNotNull();
+        assertThat(usuarioPersistido.id).isNotNull()
         assertThat(usuarioPersistido.rol).isEqualTo(Rol.TRADUCTOR)
     }
 
@@ -81,7 +81,7 @@ class UsuarioServiceTest {
     @Test
     fun crearUsuario_Buscarlo_Actualizarlo() {
         val correoElectronico = "ezeloyola3@gmail.com"
-        val usuarioNuevo = Usuario("jorgito", "jorge", "jorjiño", Rol.SOLICITANTE, 200f, "ezeloyola3@gmail.com", LocalDate.now().minusYears(23))
+        val usuarioNuevo = Usuario(username = "jorgito", nombre = "jorge", apellido = "jorjiño", rol = Rol.SOLICITANTE, precio = 200f, correoElectronico= "ezeloyola3@gmail.com", fotoPerfil = "", fechaDeNacimiento = LocalDate.now().minusYears(23))
         usuarioRepository.save(usuarioNuevo)
         val usuarioEncontrado = usuarioService.buscarPorCorreoElectronico(correoElectronico)
 

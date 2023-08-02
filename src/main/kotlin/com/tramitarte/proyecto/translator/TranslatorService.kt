@@ -95,7 +95,7 @@ class TranslatorService {
     private fun encodeFileToBase64(fileName: String, file: File): Documentacion {
         val fileContent = file.readText()
         val base64String = Base64.getEncoder().encodeToString(fileContent.toByteArray())
-        return Documentacion(fileName, base64String)
+        return Documentacion(fileName, base64String, "")
     }
 
     private fun decodeBase64ToFile(base64String: Documentacion): ByteArray {
