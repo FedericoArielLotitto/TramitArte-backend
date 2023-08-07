@@ -5,7 +5,11 @@ import com.tramitarte.proyecto.service.SolicitudAVOService
 import com.tramitarte.proyecto.service.TramiteService
 import com.tramitarte.proyecto.service.UsuarioService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.io.ByteArrayResource
+import org.springframework.core.io.Resource
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -14,9 +18,16 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
-import java.lang.Exception
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.nio.file.Files
+import kotlin.Exception
 
 @RestController
 @CrossOrigin("*")
@@ -120,6 +131,31 @@ class TramiteRestController {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, exception.message)
         } catch (exception: Exception) {
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, exception.message)
+        }
+    }
+
+    //este endpoint tiene que descargar el archivo como si se descargara un archivo de google chrome
+    //su funcionalidad esta en duda, si bien el endpoint da OK, nose si realmente esta descargando el archivo
+    //asi que imagino que esto en el front es comprobable
+    @GetMapping("/descargar")
+    fun descargarArchivo(@RequestParam file: MultipartFile): ResponseEntity<Resource> {
+        val convertedFile = file.originalFilename?.let { File.createTempFile(it, null) }
+        try {
+            val fileOutputStream = convertedFile?.let { FileOutputStream(it) }
+            fileOutputStream!!.write(file.bytes)
+            fileOutputStream.close()
+
+            val contenidoArchivo = Files.readAllBytes(convertedFile.toPath())
+            val recurso = ByteArrayResource(contenidoArchivo)
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=${convertedFile.name}")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .contentLength(convertedFile.length())
+                    .body(recurso)
+
+        } catch (error: Exception) {
+            throw error
         }
     }
 }
